@@ -1,0 +1,43 @@
+generated: '2026-09-19'
+method: searched
+probe: true
+source: https://merchant-0.com/
+signals: {}
+checked:
+- {url: 'https://merchant-0.com/privacy', status: 404}
+- {url: 'https://merchant-0.com/terms', status: 404}
+- {url: 'https://merchant-0.com/legal', status: 404}
+- {url: 'https://merchant-0.com/security', status: 404}
+- {url: 'https://merchant-0.com/accessibility', status: 404}
+- {url: 'https://merchant-0.com/legal/subprocessors', status: 404}
+- {url: 'https://merchant-0.com/legal/dpa', status: 404}
+- {url: 'https://merchant-0.com/privacy/requests', status: 404}
+- {url: 'https://merchant-0.com/transparency', status: 404}
+- {url: 'https://merchant-0.com/security/sbom', status: 404}
+- {url: 'https://merchant-0.com/ai/transparency', status: 404}
+- {url: 'https://merchant-0.com/.well-known/security.txt', status: 404}
+- {url: 'https://api.merchant-0.com/.well-known/security.txt', status: 404}
+- {url: 'https://merchant-0.com/.well-known/ucp-manifest.json', status: 200, note: 'read for compliance claims and contact addresses'}
+- {url: 'https://merchant-0.com/.well-known/agent-card.json', status: 200, note: 'read for AI disclosure, data-handling and jurisdiction statements'}
+- {url: 'https://merchant-0.com/agents', status: 200, note: 'read for AI-system disclosure'}
+observed_but_not_counted:
+- signal: ai_transparency
+  where: agent card capability descriptions ("Grok-powered intelligence queries", "Each report is generated fresh from Grok"); /agents page listing eight "AI agents" with "-simulation" reasoning-engine labels
+  why_not_counted: >-
+    Product copy naming the model that generates a deliverable is not a transparency statement — there is no
+    labelling policy, no statement about AI interaction with counterparties, and no page a person could be
+    pointed to. Recorded so a later pass does not re-derive it as a hit.
+- signal: data_residency / incident_notification / subprocessors
+  where: UCP manifest regions_served [US, EU, CN, GLOBAL]; agent card trust_signals.rls_security ("All 7 Supabase tables have RLS enabled"); "Usage tracked in Supabase"
+  why_not_counted: A regions-served list is a market claim, not a residency commitment; naming Supabase in a trust-signal blurb is not a subprocessor register; nothing states an incident-notification SLA.
+- signal: compliance identifiers
+  where: UCP manifest / GET /api/ucp/identity verifiable_credentials [vc:compliance:soc2_type2, vc:compliance:gdpr, vc:compliance:eu_ai_act, vc:business_license:2026]
+  why_not_counted: Self-asserted string tokens with no credential, issuer or report behind them (see conformance/compliance_claims_not_credited).
+- signal: data_subject_request
+  where: 'contract-wide "Rule #11: buyer_did never returned" convention (see conventions/identity_privacy)'
+  why_not_counted: A data-minimisation design choice inside the API, not a published rights-request channel; the only contact addresses (support@/security@merchant0.com) are on a domain that does not resolve.
+note: >-
+  Merchant-0 publishes no privacy policy, terms of service, legal, security, accessibility or transparency
+  page of any kind; the website is a dashboard shell. An empty signals map is the measurement. The legacy
+  agent card states jurisdiction "PH" and the canonical card specialises in "SEA, PH, BRICS+" corridors —
+  which regimes reach the provider is for the Kin Score regime map to decide, not this file.

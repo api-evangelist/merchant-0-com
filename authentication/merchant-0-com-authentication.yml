@@ -1,0 +1,77 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.merchant-0.com/openapi.json
+derived_from: openapi/merchant-0-com-openapi.json
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+- https://merchant-0.com/.well-known/did.json
+summary: >-
+  The OpenAPI declares NO securitySchemes and NO security requirements on any of its 95 operations, and
+  derive-authentication.py therefore produced no profile. Read against the contract's own descriptions and
+  the agent card, the real model is: buyer-facing routes are open — a caller asserts its identity by placing
+  its own did:web DID in the request body (buyer_did) and, at the sign step, an opaque buyer_signature whose
+  message and key the contract never defines; access is then shaped by reputation (a FLAGGED DID gets a 402
+  proof-of-work challenge answered with the X-PoW-Solution header) and by a semantic firewall (403
+  sentinel_blocked), not by credentials. Trial execution is authenticated by a trial_nonce issued with the
+  grant. Operator routes take an undocumented sandbox_token as a query or body field — "Body-field token (NOT
+  Bearer) per the established convention" — and answer 401 {"detail":"Unauthorized"} without it. There are no
+  API keys, no OAuth, no OIDC, no mTLS and no bearer tokens anywhere. The provider's own identity is a did:web
+  DID with a published Ed25519 key.
+schemes_declared: []
+schemes_observed:
+- id: buyer-did-assertion
+  type: body-field identity assertion
+  field: buyer_did (also subscriber_did as a query parameter on delivery/referral reads)
+  format: 'did:web:<domain> (AP2NegotiateBody description: {"buyer_did":"did:web:..."})'
+  applies_to: [ap2_negotiate_alias_api_ap2_negotiate_post, submit_intent_api_ap2_intent_post, checkout_api_ucp_checkout_post, ap2_dispute_file_api_ap2_dispute_post, post_trial_grant_api_ap2_trial_grant_post, get_subscription_delivery_api_subscriptions_delivery_get, get_referral_code_api_subscription_referral_code_get]
+  verification: >-
+    Not described. Nothing in the contract says the server resolves the DID document or checks a signature at
+    negotiate time; what it describes is reputation scoring on the DID (Diplomat, FLAGGED state), ownership
+    matching ("Buyer match enforced against the contract owner so rival agents cannot file disputes on other
+    agents' contracts") and, for referral codes, "auth = proven active subscription for the supplied DID".
+  privacy: 'Never echoed back — every response carries buyer_did_hash ("Rule #11").'
+- id: buyer-signature
+  type: body-field signature (opaque)
+  field: buyer_signature
+  applies_to: [ap2_sign_alias_api_ap2_sign_post, sign_cart_api_ap2_sign__intent_id__post]
+  detail: '"The buyer_signature length is logged -- never the signature material itself." The signed message, algorithm and key are not specified; the card calls it "AP2 buyer_signature" under authentication.methods.'
+- id: pow-challenge
+  type: HTTP 402 proof-of-work challenge / response header
+  header: X-PoW-Solution
+  applies_to: [ap2_negotiate_alias_api_ap2_negotiate_post]
+  detail: 'Issued only to FLAGGED buyers; "SHA-256 difficulty 4" per GET /api/publicist/manifest security.pow_challenge. Retry the same request with the solution in the header.'
+- id: trial-nonce
+  type: body-field one-time credential
+  fields: [trial_id, trial_nonce]
+  applies_to: [post_trial_execute_api_ap2_trial_execute_post]
+  detail: '"Public (authenticated by trial_nonce)"; issued by post_trial_grant, one per DID, expires 24h.'
+- id: operator-sandbox-token
+  type: query/body-field token (operator only)
+  field: sandbox_token
+  applies_to: [get_trial_status_api_trial_status_get, get_discovery_registry_package_api_discovery_registry_package_get, list_scout_proposals_api_scout_proposals_get, get_advocate_disputes_api_advocate_disputes_get, get_settlement_records_api_settlement_records_get, get_outbound_targets_api_outbound_targets_get, post_settlement_confirm_api_settlement_confirm_post, update_harvest_threshold_config_harvest_threshold_post, update_credit_limit_config_credit_limit_post, 'and the other operator control-plane writes (emergency, config, scout, sentinel, strategist, diplomat, advocate, outbound)']
+  observed: {url: 'GET https://api.merchant-0.com/api/discovery/registry-package', status: 401, body: '{"detail":"Unauthorized"}'}
+  detail: Not a buyer credential and never issued to third parties. Recorded because the contract publishes these routes in the public document.
+- id: x-payment-header
+  type: header (declared, undocumented)
+  header: X-Payment
+  applies_to: [check_inventory_alias_api_ucp_inventory_check_get]
+  detail: The x402 header name, declared optional on one read; an anonymous GET returned 200 with the catalog. No 402 PaymentRequirements was observed and no other route declares it.
+- id: wise-webhook-signature
+  type: inbound webhook signature verification (provider is the verifier)
+  header: X-Signature-SHA256
+  applies_to: [wise_webhook_receiver_api_webhooks_wise_post]
+  detail: '"RSA-SHA256 signature verification against Wise''s PUBLISHED production public key (NO DB operations until this passes)"; always-200 contract. Documents how the provider authenticates Wise, not how callers authenticate to the provider.'
+provider_identity:
+  did: did:web:merchant-0.com
+  did_document: https://merchant-0.com/.well-known/did.json
+  verification_method: {id: 'did:web:merchant-0.com#key-1', type: Ed25519VerificationKey2020, publicKeyMultibase: z6MktCZfJjbzX4rGjqf8bz9zBmBehF5cyPeWiyDR5uZ6nSRc}
+  purposes: [authentication, assertionMethod]
+  note: The card's authentication.methods lists "DID Web" first. The proof capability returns a merchant_signature; the DID key above is the only published key a verifier could try against it.
+oauth: {declared: false, discovery: {oauth_authorization_server: 404, openid_configuration: 404, oauth_protected_resource: 404}}
+api_keys: {declared: false, issued: false}
+mtls: {declared: false}
+gaps:
+- No securitySchemes in the contract, so every tooling-derived auth profile (SDK generators, gateways, this pipeline's own derive script) reads the API as unauthenticated.
+- The signing scheme for buyer_signature is unspecified; an integrator cannot produce a valid signature from the published material.
+- Public write operations (negotiate, dispute, trial-grant, intent, checkout) accept any buyer_did with no proof of control described.
+- Operator routes are published in the same document as buyer routes with no security requirement marking them.

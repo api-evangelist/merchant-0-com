@@ -1,0 +1,4278 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Merchant-0 A2A Protocol Server",
+    "description": "Agent-to-Agent Commerce API for the 2026 Agentic Economy",
+    "version": "2026.1"
+  },
+  "servers": [
+    {
+      "url": "https://api.merchant-0.com",
+      "description": "Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml)."
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Root",
+        "description": "API health check.",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/message/send": {
+      "post": {
+        "summary": "A2A Message Send",
+        "description": "Minimal JSON-RPC 2.0 handler for A2A ``message/send`` (registry health / discovery).\n\n**No database, no outbound HTTP** -- only reads the request body, parses JSON when\npresent, and returns a fixed payload. Accepts full JSON-RPC 2.0 or simpler JSON\nbodies; always HTTP **200**. Non-JSON-RPC payloads get ``id: null``.",
+        "operationId": "a2a_message_send_message_send_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "description": "Detailed health check.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/ucp-manifest.json": {
+      "get": {
+        "summary": "Get Ucp Manifest",
+        "description": "UCP Manifest Discovery Endpoint.\n\nOther agents query this to discover Merchant-0's capabilities.\nStandard location per UCP spec: /.well-known/ucp-manifest.json",
+        "operationId": "get_ucp_manifest__well_known_ucp_manifest_json_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/capabilities": {
+      "get": {
+        "summary": "List Capabilities",
+        "description": "List all UCP capabilities.",
+        "operationId": "list_capabilities_api_ucp_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/identity": {
+      "get": {
+        "summary": "Get Identity",
+        "description": "Get Merchant-0's verifiable identity.",
+        "operationId": "get_identity_api_ucp_identity_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/catalog/search": {
+      "post": {
+        "summary": "Search Catalog",
+        "description": "Search product catalog.\n\nUCP Capability: dev.ucp.catalog.search",
+        "operationId": "search_catalog_api_ucp_catalog_search_post",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Q"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Search Catalog",
+        "description": "Search product catalog.\n\nUCP Capability: dev.ucp.catalog.search",
+        "operationId": "search_catalog_api_ucp_catalog_search_get",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Q"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CatalogSearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/catalog/details/{sku}": {
+      "get": {
+        "summary": "Get Product Details",
+        "description": "Get detailed product information.\n\nUCP Capability: dev.ucp.catalog.details",
+        "operationId": "get_product_details_api_ucp_catalog_details__sku__get",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sku"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/inventory/check/{sku}": {
+      "get": {
+        "summary": "Check Inventory",
+        "description": "Check real-time stock availability.\n\nUCP Capability: dev.ucp.inventory.check\nA2A CATALOG v1.0: CEO catalog SKUs are resolved from Supabase (or\nstatic seed); other SKUs fall through to the MCP inventory server.",
+        "operationId": "check_inventory_api_ucp_inventory_check__sku__get",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sku"
+            }
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Quantity"
+            }
+          },
+          {
+            "name": "X-Payment",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Payment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/negotiate": {
+      "post": {
+        "summary": "Negotiate Quote",
+        "description": "Request a quote with dynamic pricing.\n\nUCP Capability: dev.ucp.shopping.negotiate\nUses Diplomat with sentiment-based pricing intelligence.",
+        "operationId": "negotiate_quote_api_ucp_negotiate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NegotiateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/manifest": {
+      "get": {
+        "summary": "Get Mcp Manifest",
+        "description": "MCP Server manifest for LLM integration.\n\nDescribes available tools and resources for LLMs.",
+        "operationId": "get_mcp_manifest_api_mcp_manifest_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/tools": {
+      "get": {
+        "summary": "List Mcp Tools",
+        "description": "List available MCP tools.",
+        "operationId": "list_mcp_tools_api_mcp_tools_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/resources": {
+      "get": {
+        "summary": "List Mcp Resources",
+        "description": "List available MCP resources.",
+        "operationId": "list_mcp_resources_api_mcp_resources_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/inventory/search": {
+      "post": {
+        "summary": "Mcp Inventory Search",
+        "description": "MCP Tool: search_inventory\n\nNatural language product search optimized for LLM understanding.",
+        "operationId": "mcp_inventory_search_api_mcp_inventory_search_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MCPInventoryQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/categories": {
+      "get": {
+        "summary": "Get Categories",
+        "description": "Get available product categories.",
+        "operationId": "get_categories_api_mcp_categories_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/intent": {
+      "post": {
+        "summary": "Submit Intent",
+        "description": "Submit AP2 intent mandate.\n\nStep 1 of AP2 flow: Buyer submits purchase intent.",
+        "operationId": "submit_intent_api_ap2_intent_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AP2IntentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/sign/{intent_id}": {
+      "post": {
+        "summary": "Sign Cart",
+        "description": "Sign cart mandate.\n\nStep 2 of AP2 flow: Generate signed cart mandate.",
+        "operationId": "sign_cart_api_ap2_sign__intent_id__post",
+        "parameters": [
+          {
+            "name": "intent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Intent Id"
+            }
+          },
+          {
+            "name": "discount_percent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "default": 0.0,
+              "title": "Discount Percent"
+            }
+          },
+          {
+            "name": "discount_reason",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Discount Reason"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/execute/{cart_id}": {
+      "post": {
+        "summary": "Execute Payment",
+        "description": "Execute payment.\n\nStep 3 of AP2 flow: Execute payment with proof.",
+        "operationId": "execute_payment_api_ap2_execute__cart_id__post",
+        "parameters": [
+          {
+            "name": "cart_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cart Id"
+            }
+          },
+          {
+            "name": "payment_proof",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Payment Proof"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/cart/{cart_id}": {
+      "get": {
+        "summary": "Get Cart",
+        "description": "Get signed cart details.",
+        "operationId": "get_cart_api_ap2_cart__cart_id__get",
+        "parameters": [
+          {
+            "name": "cart_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Cart Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/stats": {
+      "get": {
+        "summary": "Get Ap2 Stats",
+        "description": "Get AP2 transaction statistics.",
+        "operationId": "get_ap2_stats_api_ap2_stats_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/checkout": {
+      "post": {
+        "summary": "Checkout",
+        "description": "Complete checkout flow.\n\nUCP Capability: dev.ucp.shopping.checkout\nCombines intent validation + cart signing in one call.",
+        "operationId": "checkout_api_ucp_checkout_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckoutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dashboard/a2a": {
+      "get": {
+        "summary": "Get Dashboard Data",
+        "description": "Get A2A dashboard data.\n\nA2A CATALOG v1.0: ``catalog_items_count`` reflects the CEO service\ncatalog (Supabase a2a_catalog when present, else static seed).\n\n  ucp.trust_score / mcp.products_count -- remain 0.0 and 0 until\n  their respective real metrics land; see A2A ENDPOINT PROVISIONING\n  v1.0 notes in-repo.\n\nucp.capabilities_count / ucp.regions / mcp.categories are honest\nservice declarations. diplomat from diplomat handler. ap2 block\nmerges handler stats with Supabase ap2_executions aggregate\n(AP2 PAYMENT WIRING v1.0) for real total_executed and\ntotal_volume_usd.",
+        "operationId": "get_dashboard_data_api_dashboard_a2a_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/catalog": {
+      "get": {
+        "summary": "Get Service Catalog",
+        "description": "Public A2A service catalog (A2A CATALOG v1.0).\n\nOptional ``category`` filter: ``intelligence`` | ``data`` | ``commerce``\n| ``agent``. Backed by Supabase when available; otherwise CEO static seed.",
+        "operationId": "get_service_catalog_api_catalog_get",
+        "parameters": [
+          {
+            "name": "category",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Category"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Service Catalog Api Catalog Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/executions": {
+      "get": {
+        "summary": "Get Ap2 Executions",
+        "description": "CEO-facing completed AP2 alias executions (buyer_did excluded).",
+        "operationId": "get_ap2_executions_api_ap2_executions_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "sku",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sku"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Ap2 Executions Api Ap2 Executions Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/review/{contract_id}": {
+      "get": {
+        "summary": "Get Ap2 Review Status",
+        "description": "Strategist review status for a contract (buyer_did never returned).",
+        "operationId": "get_ap2_review_status_api_ap2_review__contract_id__get",
+        "parameters": [
+          {
+            "name": "contract_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Contract Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Ap2 Review Status Api Ap2 Review  Contract Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/reviews": {
+      "get": {
+        "summary": "Get Ap2 Reviews Ceo",
+        "description": "Pending / escalated reviews for CEO (no buyer_did in rows).",
+        "operationId": "get_ap2_reviews_ceo_api_ap2_reviews_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Ap2 Reviews Ceo Api Ap2 Reviews Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/review/{path_id}/approve": {
+      "post": {
+        "summary": "Ap2 Review Approve",
+        "description": "CEO/Strategist: approve a Strategist-escalated review.\n\nSource of truth is ``ap2_reviews``. The ``{path_id}`` URL segment\naccepts either a ``review_id`` (e.g. ``rev_...``) or a ``contract_id``\n(e.g. ``ap2_...``); the dashboard sends ``contract_id``, CEO test\ncurls typically send ``review_id``, and both paths resolve to the\nsame DB row.",
+        "operationId": "ap2_review_approve_api_ap2_review__path_id__approve_post",
+        "parameters": [
+          {
+            "name": "path_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Path Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ap2StrategistReviewActionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Ap2 Review Approve Api Ap2 Review  Path Id  Approve Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/review/{path_id}/reject": {
+      "post": {
+        "summary": "Ap2 Review Reject",
+        "description": "CEO/Strategist: reject a Strategist-escalated review.\n\nSee ``ap2_review_approve`` for the source-of-truth rationale.",
+        "operationId": "ap2_review_reject_api_ap2_review__path_id__reject_post",
+        "parameters": [
+          {
+            "name": "path_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Path Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Ap2StrategistReviewActionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Ap2 Review Reject Api Ap2 Review  Path Id  Reject Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/invoices": {
+      "get": {
+        "summary": "Get Invoices Cxo",
+        "description": "CEO-safe invoice list: buyer_did is never returned.",
+        "operationId": "get_invoices_cxo_api_invoices_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Invoices Cxo Api Invoices Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscriptions": {
+      "get": {
+        "summary": "Get Subscriptions Cxo",
+        "description": "CEO-safe subscription list: buyer_did excluded from response.",
+        "operationId": "get_subscriptions_cxo_api_subscriptions_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Subscriptions Cxo Api Subscriptions Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscriptions/{subscription_id}/usage": {
+      "get": {
+        "summary": "Get Subscription Usage By Id",
+        "description": "Per-subscription quota (buyer DID never emitted).",
+        "operationId": "get_subscription_usage_by_id_api_subscriptions__subscription_id__usage_get",
+        "parameters": [
+          {
+            "name": "subscription_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Subscription Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Subscription Usage By Id Api Subscriptions  Subscription Id  Usage Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscriptions/renew": {
+      "post": {
+        "summary": "Trigger Renewal Manually",
+        "description": "Manually trigger subscription renewal job (admin / testing).",
+        "operationId": "trigger_renewal_manually_api_subscriptions_renew_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Trigger Renewal Manually Api Subscriptions Renew Post"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/manifest": {
+      "get": {
+        "summary": "Get Ucp Manifest Alias",
+        "description": "Alias of /.well-known/ucp-manifest.json.\n\nReturns the same UCPManifest payload under the MP-specified path so\nagent SDKs written against /api/ucp/manifest succeed out of the box.",
+        "operationId": "get_ucp_manifest_alias_api_ucp_manifest_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ucp/inventory/check": {
+      "get": {
+        "summary": "Check Inventory Alias",
+        "description": "Inventory-check alias at the path-param-less URL.\n\nWithout ``?sku=``: returns the A2A service catalog listing (A2A CATALOG\nv1.0). With ``?sku=``: resolves CEO catalog first, then MCP (same\nselection order as /api/ucp/inventory/check/{sku}).",
+        "operationId": "check_inventory_alias_api_ucp_inventory_check_get",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Sku"
+            }
+          },
+          {
+            "name": "quantity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Quantity"
+            }
+          },
+          {
+            "name": "X-Payment",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Payment"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/mcp/capabilities": {
+      "get": {
+        "summary": "Get Mcp Capabilities Alias",
+        "description": "Alias of /api/mcp/manifest.\n\nReturns the same MCPInventoryServer manifest under the MP-specified\npath so agent SDKs written against /api/mcp/capabilities succeed.",
+        "operationId": "get_mcp_capabilities_alias_api_mcp_capabilities_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/negotiate": {
+      "post": {
+        "summary": "Ap2 Negotiate Alias",
+        "description": "Create a PENDING alias contract.\n\nDoes NOT cross-wire into AP2EnhancedHandler's intent/cart lifecycle;\nA2A CATALOG v1.0: terms use ``unit_price_usd`` and ``total_price_usd``\nfrom the catalog. Unknown ``item_id`` (SKU) returns HTTP 404.\n\nDIPLOMAT_v1.0 (MP #53): personalized pricing is layered after\n``_terms_for_catalog_item`` via _compute_diplomat_terms(). FLAGGED\nbuyers receive an HTTP 402 PoW challenge instead of terms; submit\nthe solution via the ``X-PoW-Solution`` request header on a retry.\nThe Diplomat layer is wrapped in try/except -- any failure leaves\nthe negotiate handler in its pre-MP-#53 catalog-price behavior\n(Rule #7 ADDITIVE ONLY).\n\nSENTINEL_v1.0 (MP #55, Task 2.3): the Sentinel screens every\nincoming request through the SemanticFirewall BEFORE catalog,\nDiplomat, and credit checks. Confirmed injection patterns return\nHTTP 403 sentinel_blocked; everything else (including\nSentinel-internal errors per Rule #7) falls through to the\npre-MP-#55 handler logic unchanged.",
+        "operationId": "ap2_negotiate_alias_api_ap2_negotiate_post",
+        "parameters": [
+          {
+            "name": "X-PoW-Solution",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Pow-Solution"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AP2NegotiateBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Ap2 Negotiate Alias Api Ap2 Negotiate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/sign": {
+      "post": {
+        "summary": "Ap2 Sign Alias",
+        "description": "Transition an alias contract to SIGNED.\n\nPrecondition: contract exists and is in PENDING (or already SIGNED,\nwhich is idempotent). The buyer_signature length is logged -- never\nthe signature material itself.\n\nSENTINEL_v1.0 (MP #55, Task 2.4): the Sentinel screens the signing\nrequest through the SemanticFirewall AFTER the contract / state\npreconditions and BEFORE the Advocate validation. Confirmed\ninjection patterns return HTTP 403 sentinel_blocked; everything\nelse falls through to the Advocate (Rule #7 fail-open).",
+        "operationId": "ap2_sign_alias_api_ap2_sign_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AP2SignBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Ap2 Sign Alias Api Ap2 Sign Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/execute": {
+      "post": {
+        "summary": "Ap2 Execute Alias",
+        "description": "Transition an alias contract to EXECUTED.\n\nPrecondition: contract exists and is in SIGNED. Logs a settlement\nrouting intent toward USD_SETTLEMENT_ACCOUNT (Vault key 17) via the\nnon-secret label -- never touches an account number. Actual payment\nwiring lands in AP2 PAYMENT WIRING v1.0.",
+        "operationId": "ap2_execute_alias_api_ap2_execute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AP2ExecuteBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Ap2 Execute Alias Api Ap2 Execute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/intel": {
+      "get": {
+        "summary": "Get All Intel Queries",
+        "description": "CEO-style aggregate of recent intel queries (buyer_did excluded).",
+        "operationId": "get_all_intel_queries_api_intel_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get All Intel Queries Api Intel Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/intel/{execution_id}": {
+      "get": {
+        "summary": "Get Intel Result",
+        "description": "Retrieve stored intel for one execution (buyer_did never returned).",
+        "operationId": "get_intel_result_api_intel__execution_id__get",
+        "parameters": [
+          {
+            "name": "execution_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Execution Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get Intel Result Api Intel  Execution Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/harvest/history": {
+      "get": {
+        "summary": "Get Harvest History",
+        "description": "Harvest tracker state for the Treasury dashboard.\n\nZero-state: no trades have executed yet, so current_harvest_usd\nis Decimal(\"0\") and harvest_history is an empty list. The\nharvest_target_usd is the CEO-configured threshold sourced from\nthe harvest_config singleton (HARVEST_THRESHOLD_CONFIG v1.0, MP\n#46); it defaults to Decimal(\"0\") when the DB is unreachable\nAND no HARVEST_THRESHOLD_USD env var is set, which preserves\nthe original zero-state shape under failure. Response key names\nmirror the sandbox reference (see\nsrc/merchant0/sandbox/mock_fintech_app.py get_harvest_history)\nso the Treasury dashboard frontend works against either surface\nwithout change.\n\nIPA v2.0 specified endpoint.",
+        "operationId": "get_harvest_history_harvest_history_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/bank/usd-balance": {
+      "get": {
+        "summary": "Get Usd Balance",
+        "description": "Wise USD settlement account balance for the Treasury dashboard.\n\nZero-state: no inbound payments received, so balance is Decimal(\"0\").\nResponse key names mirror the sandbox reference (see\nsrc/merchant0/sandbox/mock_fintech_app.py get_usd_balance) so the\nTreasury dashboard frontend consumes the same shape regardless of\nwhich surface it calls.\n\nIPA v2.0 specified endpoint. USD_SETTLEMENT_ACCOUNT = KEY 17 (future\nVaultManager wiring). Manual harvest: CEO converts USD to PHP via\nthe Wise app; Merchant-0 does not perform the conversion.",
+        "operationId": "get_usd_balance_bank_usd_balance_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credit-health": {
+      "get": {
+        "summary": "Get Credit Health",
+        "description": "VISA credit facility health and utilization.\n\nReturns clean zero-state until live VISA data exists. Response keys\nmirror the boardroom CreditHealth TypeScript interface and the\nsandbox CreditHealthResponse Pydantic model exactly so the dashboard\nworks against either surface without change.\n\nPhase 36 Credit System. VaultManager KEY 15 = CEO_VISA_OPERATIONAL_LIMIT.\nVaultManager KEY 16 = VISA_CUMULATIVE_OUTSTANDING. Neither is wired\nyet; once wired, replace the Decimal(\"0.00\") outstanding seed with the\nlive value pulled from Supabase.",
+        "operationId": "get_credit_health_credit_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Credit Health Credit Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sandbox/state": {
+      "get": {
+        "summary": "Get Sandbox State",
+        "description": "Current operational system state.\n\nConsumed silently by the boardroom, ceo, and ceo/partners pages\n(see module-level comment above). Returns zero/false/empty state\nuntil live data is wired. Never raises for missing data -- always\nreturns a valid JSON payload matching the boardroom SandboxState\nTypeScript interface so consumer pages render zero-state UI, not\nan error banner.\n\nNote: the path is intentionally kept as /sandbox/state for\nfrontend contract compatibility. This is a production endpoint\ndespite the name.",
+        "operationId": "get_sandbox_state_sandbox_state_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Sandbox State Sandbox State Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/credit-limit": {
+      "post": {
+        "summary": "Update Credit Limit",
+        "description": "Update CEO operational VISA credit limit.\n\nPhase 36 Credit System. Valid range: MINIMUM_OPERATIONAL_LIMIT\n(PHP 10,000) to CEO_OPERATIONAL_LIMIT_DEFAULT (PHP 240,000) --\nboth imported from velocity_engine, never hardcoded here.\nRequires the ``sandbox_token`` body field to match the\nCEO_PRODUCTION_TOKEN environment variable.\n\nStatus codes returned in the response body (HTTP 200 always):\n    UPDATED         -- limit accepted and acknowledged.\n    REJECTED_AUTH   -- sandbox_token mismatch.\n    REJECTED_RANGE  -- new_limit_php out of [10,000 .. 240,000].\n    ERROR           -- malformed numeric value in new_limit_php.\n\nPersistence note: until VaultManager KEY 15 is wired, UPDATED is\nin-memory only and does not affect subsequent /credit-health\nresponses. See section header above.",
+        "operationId": "update_credit_limit_config_credit_limit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreditLimitUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Update Credit Limit Config Credit Limit Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/harvest-threshold": {
+      "get": {
+        "summary": "Get Harvest Threshold Config",
+        "description": "Return the currently configured harvest threshold (no auth).\n\nMirrors GET /credit-health's public-read posture. Calls\nread_harvest_threshold_from_db() which transparently falls back\nto the HARVEST_THRESHOLD_USD env var when the DB is unreachable.\nThe source field on the response makes the provenance explicit\nso the dashboard can optionally distinguish a CEO-set value\nfrom a fallback default.",
+        "operationId": "get_harvest_threshold_config_config_harvest_threshold_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Harvest Threshold Config Config Harvest Threshold Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Update Harvest Threshold",
+        "description": "Update the CEO-configured USD harvest threshold.\n\nHARVEST_THRESHOLD_CONFIG v1.0 (MP #46). Valid range:\nHARVEST_THRESHOLD_MIN_USD (0.00) to HARVEST_THRESHOLD_MAX_USD\n(10000.00) -- the upper bound is a sanity cap, not a business\nconstraint. Requires the sandbox_token body field to match the\nCEO_PRODUCTION_TOKEN environment variable (same auth pattern as\nPOST /config/credit-limit).\n\nStatus codes returned in the response body (HTTP 200 always):\n    UPDATED         -- threshold accepted and persisted.\n    REJECTED_AUTH   -- sandbox_token mismatch.\n    REJECTED_RANGE  -- new_threshold_usd out of [0.00 .. 10000.00].\n    ERROR           -- malformed numeric value in new_threshold_usd.",
+        "operationId": "update_harvest_threshold_config_harvest_threshold_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HarvestThresholdUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Update Harvest Threshold Config Harvest Threshold Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/credit/status": {
+      "get": {
+        "summary": "Get Credit Status Endpoint",
+        "description": "Machine-readable CEO operational credit health.\n\nDesigned for agent consumption: an agent can poll this endpoint\nbefore negotiating an expensive deal to avoid wasted round trips\nwhen the credit pool is exhausted. The CEO dashboard also reads\nthis via a same-origin proxy.\n\nPublic surface intentionally minimal -- exposes health band,\nutilization percentage, and remaining USD headroom but NEVER the\nraw PHP credit limit. The raw limit is operationally sensitive\n(gives an attacker the exact spending ceiling); the available_usd\nfigure is the only number an external agent legitimately needs.\n\nDistinct from the older /credit-health endpoint (zero-state\nscaffold from Phase 36, never wired to ap2_executions). This\nendpoint reads live spend data. /credit-health is preserved for\nbackward compatibility with the boardroom Credit Tank widget.\n\nNo authentication required -- safe-by-design response surface.",
+        "operationId": "get_credit_status_endpoint_api_credit_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Credit Status Endpoint Api Credit Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/webhooks/wise": {
+      "post": {
+        "summary": "Wise Webhook Receiver",
+        "description": "Inbound Wise webhook receiver -- AP2 auto-settlement (MP #42).\n\nContract (always-200):\n  - HTTP 200 on every path, including signature failure, parse\n    failure, unknown event type, and DB error. Failures are\n    recorded via StructuredLogger; the JSON body status + reason\n    fields describe the outcome.\n\nValidation order (MP rule #11):\n  1. Read raw body + headers\n  2. RSA-SHA256 signature verification against Wise's PUBLISHED\n     production public key (NO DB operations until this passes)\n  3. JSON parse\n  4. X-Test-Notification handling (Wise sends this to verify the\n     callback URL when a subscription is being set up; we MUST\n     respond 2xx)\n  5. Event normalization via parse_wise_event\n  6. Filter: must be an inbound-credit event with transaction_type\n     == \"credit\" AND currency == \"USD\"\n  7. 3-criteria settlement matcher\n\nSecurity (MP rule #8, Path A):\n  - No shared secret exists in the Wise protocol; verification uses\n    the public key embedded at module-scope (safe -- public material)\n  - X-Signature-SHA256 header value is logged only as an 8-char\n    prefix for forensic correlation\n  - The cryptography library handles constant-time RSA verification\n    internally; no application-level timing leaks\n\nCoexistence with execute-time poll (check_wise_inbound_transfer):\n  The existing poll runs synchronously during /api/ap2/execute and\n  may have already set settlement_confirmed=true on a row. This\n  webhook UPDATEs the same row; the matcher only considers rows\n  with settlement_confirmed=false in its candidate pool, so a\n  previously-confirmed row is silently passed over (no double-\n  confirm, no false alarm).",
+        "operationId": "wise_webhook_receiver_api_webhooks_wise_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/emergency/status": {
+      "get": {
+        "summary": "Get Emergency Status",
+        "description": "GET /emergency/status -- current emergency system state.\n\nRead-only. No authentication required. CEO consults this before\ninitiating any emergency action. Returns zero-state Decimal(\"0\")\nfund balances until FUND_BALANCE_WIRING v1.0 lands.",
+        "operationId": "get_emergency_status_emergency_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Emergency Status Emergency Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/emergency/kill-switch/arm": {
+      "post": {
+        "summary": "Arm Kill Switch",
+        "description": "Arm the kill switch. Requires 2FA. Reversible.\n\nReturns HTTP 200 always; success/failure is carried in the\nresponse body's ``status`` field (enum EmergencyActionStatus)\nper the established /config/credit-limit convention.",
+        "operationId": "arm_kill_switch_emergency_kill_switch_arm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmergencyActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Arm Kill Switch Emergency Kill Switch Arm Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/emergency/kill-switch/activate": {
+      "post": {
+        "summary": "Activate Kill Switch",
+        "description": "Activate the kill switch. Requires 2FA + prior /arm success.\n\nIRREVERSIBLE in production. Returns HTTP 200 always; status in\nthe body's ``status`` field. Records intent and logs the action;\nthe actual agent-pipeline stop is wired in\nEMERGENCY_WIRE_TO_DUAL_KILL_SWITCH v1.0.",
+        "operationId": "activate_kill_switch_emergency_kill_switch_activate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmergencyActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Activate Kill Switch Emergency Kill Switch Activate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/emergency/evacuate/initiate": {
+      "post": {
+        "summary": "Initiate Evacuation",
+        "description": "Initiate financial evacuation. Requires 2FA. Irreversible.\n\nRecords evacuation intent. Actual fund movement is executed by\nPaymentRail in a follow-up MP. Returns HTTP 200 always; status\nin the body's ``status`` field. Never echoes EVACUATION_DESTINATION.",
+        "operationId": "initiate_evacuation_emergency_evacuate_initiate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmergencyActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Initiate Evacuation Emergency Evacuate Initiate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scout/status": {
+      "get": {
+        "summary": "Get Scout Status",
+        "description": "SCOUT_v1.0 (MP #50, Task 5.5). Public, no auth required.\n\nReturns a typed ScoutStatusResponse serialised to dict. Reads\naggregate counts from scout_proposals; never exposes any individual\nrow contents -- safe for unauthenticated discovery.",
+        "operationId": "get_scout_status_api_scout_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Scout Status Api Scout Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scout/proposals": {
+      "get": {
+        "summary": "List Scout Proposals",
+        "description": "SCOUT_v1.0 (MP #50, Task 5.1). CEO-auth.\n\nLists proposals filtered by optional ``status`` query parameter,\nplus aggregate counts and the count of auto-approved rows still in\ntheir 24h veto window. Auth via ``?sandbox_token=`` query parameter\ncompared against _GENESIS_TOKEN (CEO_PRODUCTION_TOKEN env). Missing\nor wrong token returns HTTP 401 (matches MP #50 Probe 50.3).",
+        "operationId": "list_scout_proposals_api_scout_proposals_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response List Scout Proposals Api Scout Proposals Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scout/proposals/{proposal_id}/approve": {
+      "post": {
+        "summary": "Approve Scout Proposal",
+        "description": "SCOUT_v1.0 (MP #50, Task 5.2). CEO-auth.\n\nApproves a PENDING_CEO_REVIEW proposal. Inserts into a2a_catalog\n(available=true) and updates scout_proposals.status to APPROVED.\n404 if not found; 422 if status != PENDING_CEO_REVIEW.",
+        "operationId": "approve_scout_proposal_api_scout_proposals__proposal_id__approve_post",
+        "parameters": [
+          {
+            "name": "proposal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Proposal Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoutApproveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Approve Scout Proposal Api Scout Proposals  Proposal Id  Approve Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scout/proposals/{proposal_id}/reject": {
+      "post": {
+        "summary": "Reject Scout Proposal",
+        "description": "SCOUT_v1.0 (MP #50, Task 5.3). CEO-auth.\n\nRejects a PENDING_CEO_REVIEW proposal (no catalog impact). 422 if\nstatus is AUTO_APPROVED (must veto, not reject) or APPROVED (already\nlive -- the CEO disables via the catalog endpoint instead).",
+        "operationId": "reject_scout_proposal_api_scout_proposals__proposal_id__reject_post",
+        "parameters": [
+          {
+            "name": "proposal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Proposal Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoutRejectRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Reject Scout Proposal Api Scout Proposals  Proposal Id  Reject Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scout/proposals/{proposal_id}/veto": {
+      "post": {
+        "summary": "Veto Scout Proposal",
+        "description": "SCOUT_v1.0 (MP #50, Task 5.4). CEO-auth.\n\nVetoes an AUTO_APPROVED proposal within its 24h veto window. Sets\nthe corresponding a2a_catalog row available=false (preserves audit\ntrail) and updates scout_proposals.status to VETOED. 422 if:\n  - status != AUTO_APPROVED\n  - veto_deadline has passed (window expired)\n  - catalog_sku is NULL (shouldn't happen but guard anyway)",
+        "operationId": "veto_scout_proposal_api_scout_proposals__proposal_id__veto_post",
+        "parameters": [
+          {
+            "name": "proposal_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Proposal Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScoutVetoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Veto Scout Proposal Api Scout Proposals  Proposal Id  Veto Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/technologist/status": {
+      "get": {
+        "summary": "Get Technologist Status",
+        "description": "INFERENCE_SOVEREIGNTY v1.0 (MP #51, Task 3.7). Public.",
+        "operationId": "get_technologist_status_api_technologist_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Technologist Status Api Technologist Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/price-bands": {
+      "get": {
+        "summary": "Get Price Bands Config",
+        "description": "TREASURER_v1.0 (MP #52, Task 1.2). CEO-auth via query token.",
+        "operationId": "get_price_bands_config_config_price_bands_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Price Bands Config Config Price Bands Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/config/price-bands/{sku}": {
+      "post": {
+        "summary": "Update Price Band Config",
+        "description": "TREASURER_v1.0 (MP #52, Task 1.3). CEO-auth; merge partial body.",
+        "operationId": "update_price_band_config_config_price_bands__sku__post",
+        "parameters": [
+          {
+            "name": "sku",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sku"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceBandUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Update Price Band Config Config Price Bands  Sku  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/treasurer/status": {
+      "get": {
+        "summary": "Get Treasurer Status",
+        "description": "TREASURER_v1.0 (MP #52, Task 4.1). Public.",
+        "operationId": "get_treasurer_status_api_treasurer_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Treasurer Status Api Treasurer Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/diplomat/status": {
+      "get": {
+        "summary": "Get Diplomat Status",
+        "description": "TREASURER pattern. Public. Rule #11 -- no buyer_did fields.",
+        "operationId": "get_diplomat_status_api_diplomat_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Diplomat Status Api Diplomat Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/diplomat/reputation/reset": {
+      "post": {
+        "summary": "Diplomat Reputation Reset",
+        "description": "CEO-only. Rule #11 -- response surfaces only the DID hash.",
+        "operationId": "diplomat_reputation_reset_api_diplomat_reputation_reset_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReputationResetRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Diplomat Reputation Reset Api Diplomat Reputation Reset Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/dispute": {
+      "post": {
+        "summary": "Ap2 Dispute File",
+        "description": "Buyer-initiated dispute filing.\n\nNo auth required (A2A-direct -- Deviation 8). Rule #11: response\nsurfaces only buyer_did_hash. Buyer match enforced against the\ncontract owner so rival agents cannot file disputes on other\nagents' contracts.",
+        "operationId": "ap2_dispute_file_api_ap2_dispute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputeFileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Ap2 Dispute File Api Ap2 Dispute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/advocate/disputes": {
+      "get": {
+        "summary": "Get Advocate Disputes",
+        "description": "CEO-only dispute list. Auth via sandbox_token query/body.",
+        "operationId": "get_advocate_disputes_api_advocate_disputes_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Advocate Disputes Api Advocate Disputes Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/advocate/disputes/{dispute_id}/resolve": {
+      "post": {
+        "summary": "Resolve Advocate Dispute",
+        "description": "CEO-only dispute resolution.",
+        "operationId": "resolve_advocate_dispute_api_advocate_disputes__dispute_id__resolve_post",
+        "parameters": [
+          {
+            "name": "dispute_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Dispute Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DisputeResolveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Resolve Advocate Dispute Api Advocate Disputes  Dispute Id  Resolve Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/advocate/status": {
+      "get": {
+        "summary": "Get Advocate Status",
+        "description": "Public advocate metrics + HF-51.x probe verification.",
+        "operationId": "get_advocate_status_api_advocate_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Advocate Status Api Advocate Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sentinel/whitelist/add": {
+      "post": {
+        "summary": "Sentinel Whitelist Add",
+        "description": "CEO-only: add a buyer DID to the Sentinel whitelist.",
+        "operationId": "sentinel_whitelist_add_api_sentinel_whitelist_add_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhitelistMutateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Sentinel Whitelist Add Api Sentinel Whitelist Add Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sentinel/whitelist/remove": {
+      "post": {
+        "summary": "Sentinel Whitelist Remove",
+        "description": "CEO-only: remove a buyer DID from the Sentinel whitelist.",
+        "operationId": "sentinel_whitelist_remove_api_sentinel_whitelist_remove_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WhitelistMutateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Sentinel Whitelist Remove Api Sentinel Whitelist Remove Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sentinel/status": {
+      "get": {
+        "summary": "Get Sentinel Status",
+        "description": "Public Sentinel metrics. Rule #11: no buyer_did fields.",
+        "operationId": "get_sentinel_status_api_sentinel_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Sentinel Status Api Sentinel Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strategist/status": {
+      "get": {
+        "summary": "Get Strategist Status",
+        "description": "Public Strategist metrics. Rule #11: no buyer_did fields.",
+        "operationId": "get_strategist_status_api_strategist_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Strategist Status Api Strategist Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strategist/briefing": {
+      "get": {
+        "summary": "Get Strategist Briefing",
+        "description": "CEO-only: latest full briefing. Rule #11: no buyer_did.",
+        "operationId": "get_strategist_briefing_api_strategist_briefing_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Strategist Briefing Api Strategist Briefing Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/strategist/briefing/generate": {
+      "post": {
+        "summary": "Post Strategist Briefing Generate",
+        "description": "CEO-only: synchronous on-demand briefing. Rule #13 advisory.",
+        "operationId": "post_strategist_briefing_generate_api_strategist_briefing_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StrategistGenerateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Post Strategist Briefing Generate Api Strategist Briefing Generate Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/publicist/manifest": {
+      "get": {
+        "summary": "Get Publicist Manifest",
+        "description": "Public discovery manifest (Task 2.4). type=agent|did|ucp.",
+        "operationId": "get_publicist_manifest_api_publicist_manifest_get",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "agent",
+              "title": "Type"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/publicist/catalog": {
+      "get": {
+        "summary": "Get Publicist Catalog",
+        "description": "Public catalog broadcast (Task 3.1). 5-minute in-memory cache.",
+        "operationId": "get_publicist_catalog_api_publicist_catalog_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Publicist Catalog Api Publicist Catalog Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/publicist/status": {
+      "get": {
+        "summary": "Get Publicist Status",
+        "description": "Public Publicist metrics (Task 5.1). Rule #11: no buyer_did.",
+        "operationId": "get_publicist_status_api_publicist_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Publicist Status Api Publicist Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscriptions/delivery": {
+      "get": {
+        "summary": "Get Subscription Delivery",
+        "description": "Pull endpoint for subscriber agents (Task 3.1). No CEO token.\n\nRule #11: response carries subscriber_did_hash, never the raw DID.",
+        "operationId": "get_subscription_delivery_api_subscriptions_delivery_get",
+        "parameters": [
+          {
+            "name": "subscriber_did",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Subscriber Did"
+            }
+          },
+          {
+            "name": "sku",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sku"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Subscription Delivery Api Subscriptions Delivery Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscriptions/delivery/status": {
+      "get": {
+        "summary": "Get Subscription Delivery Status",
+        "description": "CEO-only delivery-pipeline visibility (Task 3.2). Rule #11.",
+        "operationId": "get_subscription_delivery_status_api_subscriptions_delivery_status_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Subscription Delivery Status Api Subscriptions Delivery Status Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settlement/status": {
+      "get": {
+        "summary": "Get Settlement Status",
+        "description": "Public settlement analytics (Task 3.1). Triggers expiry sweep.",
+        "operationId": "get_settlement_status_api_settlement_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Settlement Status Api Settlement Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settlement/records": {
+      "get": {
+        "summary": "Get Settlement Records",
+        "description": "CEO settlement records + summary (Task 3.2). Rule #11: hash only.",
+        "operationId": "get_settlement_records_api_settlement_records_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Status"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Settlement Records Api Settlement Records Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/settlement/confirm": {
+      "post": {
+        "summary": "Post Settlement Confirm",
+        "description": "CEO manual settlement confirmation (Task 3.3). Rule #13: CEO decision.",
+        "operationId": "post_settlement_confirm_api_settlement_confirm_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettlementConfirmBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Post Settlement Confirm Api Settlement Confirm Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discovery/hit": {
+      "post": {
+        "summary": "Post Discovery Hit",
+        "description": "Fire-and-forget discovery hit logger (Task 2.1). Never raises.\n\nCalled server-side by the Next.js .well-known dynamic routes, so it\nhas no auth. Must be fast: one INSERT, no further processing.\nRule #9: statement_cache_size=0. Rule #11: no buyer_did, no IP.",
+        "operationId": "post_discovery_hit_api_discovery_hit_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryHitBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Post Discovery Hit Api Discovery Hit Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discovery/funnel": {
+      "get": {
+        "summary": "Get Discovery Funnel",
+        "description": "CEO discovery funnel (Task 2.2). Rule #11: no buyer_did.",
+        "operationId": "get_discovery_funnel_api_discovery_funnel_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Discovery Funnel Api Discovery Funnel Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/discovery/registry-package": {
+      "get": {
+        "summary": "Get Discovery Registry Package",
+        "description": "CEO registry submission package (Task 2.3).",
+        "operationId": "get_discovery_registry_package_api_discovery_registry_package_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Discovery Registry Package Api Discovery Registry Package Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/outbound/status": {
+      "get": {
+        "summary": "Get Outbound Status",
+        "description": "Public outreach status -- aggregate counts only (no row contents).",
+        "operationId": "get_outbound_status_api_outbound_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Outbound Status Api Outbound Status Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/outbound/targets": {
+      "get": {
+        "summary": "Get Outbound Targets",
+        "description": "CEO outreach target list (sandbox_token auth).",
+        "operationId": "get_outbound_targets_api_outbound_targets_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Outbound Targets Api Outbound Targets Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Outbound Target",
+        "description": "CEO adds an outreach target (sandbox_token auth). Idempotent.",
+        "operationId": "add_outbound_target_api_outbound_targets_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutboundAddTargetBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Add Outbound Target Api Outbound Targets Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/outbound/run": {
+      "post": {
+        "summary": "Run Outbound Now",
+        "description": "CEO on-demand outreach cycle (sandbox_token auth).",
+        "operationId": "run_outbound_now_api_outbound_run_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OutboundAddTargetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Run Outbound Now Api Outbound Run Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/trial-grant": {
+      "post": {
+        "summary": "Post Trial Grant",
+        "description": "Grant a free trial for merchant0-intel-001 (Task 2.1).\n\nPublic (any buyer agent). One trial per DID, expires 24h, not for\nFLAGGED DIDs. Rule #11: only buyer_did_hash in response / logs.",
+        "operationId": "post_trial_grant_api_ap2_trial_grant_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrialGrantBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Post Trial Grant Api Ap2 Trial Grant Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ap2/trial-execute": {
+      "post": {
+        "summary": "Post Trial Execute",
+        "description": "Use a trial grant: real Grok intel, $0.00 audit row (Task 3.1).\n\nPublic (authenticated by trial_nonce). Grok only -- never Perplexity.\nDoes NOT increment buyer_reputation.total_executions (acquisition\ndiscount preserved). Rule #11: only buyer_did_hash in response.",
+        "operationId": "post_trial_execute_api_ap2_trial_execute_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrialExecuteBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Post Trial Execute Api Ap2 Trial Execute Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/trial/status": {
+      "get": {
+        "summary": "Get Trial Status",
+        "description": "CEO trial pipeline status (Task 4.1). Rule #11: no buyer_did.",
+        "operationId": "get_trial_status_api_trial_status_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Trial Status Api Trial Status Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscription/referral-code": {
+      "get": {
+        "summary": "Get Referral Code",
+        "description": "Issue / retrieve a subscriber's referral code (Task 3.4).\n\nPublic to the subscriber (auth = proven active subscription for the\nsupplied DID, NOT a CEO token). Rule #11: only owner_did_hash returned.\nIdempotent: returns the existing code if one exists.",
+        "operationId": "get_referral_code_api_subscription_referral_code_get",
+        "parameters": [
+          {
+            "name": "subscriber_did",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Subscriber Did"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Referral Code Api Subscription Referral Code Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/subscription/growth-stats": {
+      "get": {
+        "summary": "Get Subscription Growth Stats",
+        "description": "CEO subscription growth + referral metrics (Task 3.6). Rule #11.",
+        "operationId": "get_subscription_growth_stats_api_subscription_growth_stats_get",
+        "parameters": [
+          {
+            "name": "sandbox_token",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "",
+              "title": "Sandbox Token"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "title": "Response Get Subscription Growth Stats Api Subscription Growth Stats Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AP2ExecuteBody": {
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          },
+          "dry_run": {
+            "type": "boolean",
+            "title": "Dry Run",
+            "default": false
+          },
+          "target_did": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Did"
+          },
+          "subscription_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Subscription Id"
+          },
+          "report_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "contract_id"
+        ],
+        "title": "AP2ExecuteBody",
+        "description": "POST /api/ap2/execute request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\"}\n\nOptional fields by deliverable SKU (CATALOG_EXPANSION v1.0 / MP #40):\n\n* ``query`` (str)        -- INTEL_SKUS (merchant0-intel-001),\n                            REPORT_SKUS (merchant0-report-001).\n                            Free-form trade question; required for\n                            report-001 to dispatch Grok.\n* ``report_type`` (str)  -- REPORT_SKUS hint: \"trade_route\" |\n                            \"regulatory\" | \"arbitrage\". Currently\n                            advisory only -- Grok prompt is unified.\n* ``target_did`` (str)   -- VERIFY_SKUS (merchant0-verify-001) only.\n                            The DID to be verified. NOT the buyer's DID.\n* ``subscription_id`` (str)\n                        -- PROOF_SKUS (merchant0-proof-001) only.\n                            Optional; if absent the most-recent active\n                            subscription for the buyer is used.\n* ``dry_run`` (bool)     -- skips invoice / subscription side effects;\n                            delivery handlers still run for testing."
+      },
+      "AP2IntentRequest": {
+        "properties": {
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          },
+          "buyer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer Name"
+          },
+          "items": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "subtotal": {
+            "type": "number",
+            "title": "Subtotal"
+          },
+          "currency": {
+            "type": "string",
+            "title": "Currency",
+            "default": "USD"
+          },
+          "delivery_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Region"
+          },
+          "payment_method_preference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Payment Method Preference"
+          }
+        },
+        "type": "object",
+        "required": [
+          "buyer_did",
+          "items",
+          "subtotal"
+        ],
+        "title": "AP2IntentRequest",
+        "description": "AP2 Intent submission request."
+      },
+      "AP2NegotiateBody": {
+        "properties": {
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          },
+          "item_id": {
+            "type": "string",
+            "title": "Item Id"
+          },
+          "quantity": {
+            "type": "integer",
+            "minimum": 1.0,
+            "title": "Quantity",
+            "default": 1
+          }
+        },
+        "type": "object",
+        "required": [
+          "buyer_did",
+          "item_id"
+        ],
+        "title": "AP2NegotiateBody",
+        "description": "POST /api/ap2/negotiate request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"buyer_did\":\"did:web:...\",\"item_id\":\"...\",\"quantity\":1}"
+      },
+      "AP2SignBody": {
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id"
+          },
+          "buyer_signature": {
+            "type": "string",
+            "title": "Buyer Signature"
+          },
+          "buyer_did": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer Did"
+          }
+        },
+        "type": "object",
+        "required": [
+          "contract_id",
+          "buyer_signature"
+        ],
+        "title": "AP2SignBody",
+        "description": "POST /api/ap2/sign request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\",\"buyer_signature\":\"...\"}\n\nADVOCATE_v1.0 (MP #54, Deviation 1): ``buyer_did`` is accepted\noptionally so the Advocate's BUYER_MISMATCH validation can fire\nwhen callers identify themselves at sign time. Existing buyer\nagents that omit this field keep their pre-MP-#54 behaviour --\nthe Advocate skips the BUYER_MISMATCH check (other validations\nstill run) and the sign handler proceeds as before."
+      },
+      "Ap2StrategistReviewActionBody": {
+        "properties": {
+          "ceo_token": {
+            "type": "string",
+            "title": "Ceo Token"
+          },
+          "note": {
+            "type": "string",
+            "title": "Note",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "ceo_token"
+        ],
+        "title": "Ap2StrategistReviewActionBody",
+        "description": "POST body for CEO approve/reject on Strategist-gated AP2 contracts."
+      },
+      "CatalogSearchRequest": {
+        "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price"
+          },
+          "max_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price"
+          },
+          "in_stock_only": {
+            "type": "boolean",
+            "title": "In Stock Only",
+            "default": true
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "default": 10
+          }
+        },
+        "type": "object",
+        "title": "CatalogSearchRequest",
+        "description": "Catalog search request."
+      },
+      "CheckoutRequest": {
+        "properties": {
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          },
+          "buyer_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Buyer Name"
+          },
+          "items": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "delivery_region": {
+            "type": "string",
+            "title": "Delivery Region",
+            "default": "US"
+          },
+          "payment_method": {
+            "type": "string",
+            "title": "Payment Method",
+            "default": "stripe"
+          }
+        },
+        "type": "object",
+        "required": [
+          "buyer_did",
+          "items"
+        ],
+        "title": "CheckoutRequest",
+        "description": "Combined checkout request."
+      },
+      "CreditLimitUpdateRequest": {
+        "properties": {
+          "new_limit_php": {
+            "type": "string",
+            "title": "New Limit Php"
+          },
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "new_limit_php",
+          "sandbox_token"
+        ],
+        "title": "CreditLimitUpdateRequest",
+        "description": "POST /config/credit-limit request body.\n\nField names mirror the boardroom and ceo/settings frontends: the\nnew limit is carried as ``new_limit_php`` (typed str on the wire\nbecause both frontends send ``JSON.stringify({ new_limit_php:\nnewLimit, ... })`` where ``newLimit`` is a raw text-input string).\nThe handler coerces the value to Decimal via ``Decimal(str(...))``\n-- it is NEVER typed float per rule #1. ``sandbox_token`` carries\nthe body-field form of the CEO sandbox token used by the sandbox\nreference contract (see mock_fintech_app.py line 309)."
+      },
+      "DiscoveryHitBody": {
+        "properties": {
+          "endpoint": {
+            "type": "string",
+            "title": "Endpoint",
+            "default": ""
+          },
+          "user_agent": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Agent"
+          },
+          "referer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referer"
+          }
+        },
+        "type": "object",
+        "title": "DiscoveryHitBody",
+        "description": "POST /api/discovery/hit body (codebase BaseModel convention).\n\nCalled fire-and-forget by the Next.js .well-known dynamic routes. No\nauth, no buyer_did, no IP -- discovery precedes identity (Rule #11)."
+      },
+      "DisputeFileRequest": {
+        "properties": {
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          },
+          "contract_id": {
+            "type": "string",
+            "title": "Contract Id"
+          },
+          "execution_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execution Id"
+          },
+          "dispute_type": {
+            "type": "string",
+            "title": "Dispute Type"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          }
+        },
+        "type": "object",
+        "required": [
+          "buyer_did",
+          "contract_id",
+          "dispute_type",
+          "description"
+        ],
+        "title": "DisputeFileRequest",
+        "description": "POST /api/ap2/dispute body."
+      },
+      "DisputeResolveRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          },
+          "resolution": {
+            "type": "string",
+            "title": "Resolution"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "advocate_notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Advocate Notes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token",
+          "resolution",
+          "status"
+        ],
+        "title": "DisputeResolveRequest",
+        "description": "POST /api/advocate/disputes/{id}/resolve body."
+      },
+      "EmergencyActionRequest": {
+        "properties": {
+          "ceo_token": {
+            "type": "string",
+            "title": "Ceo Token"
+          },
+          "ceo_pin": {
+            "type": "string",
+            "title": "Ceo Pin"
+          },
+          "confirmation": {
+            "type": "string",
+            "title": "Confirmation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ceo_token",
+          "ceo_pin",
+          "confirmation"
+        ],
+        "title": "EmergencyActionRequest",
+        "description": "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HarvestThresholdUpdateRequest": {
+        "properties": {
+          "new_threshold_usd": {
+            "type": "string",
+            "title": "New Threshold Usd"
+          },
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "new_threshold_usd",
+          "sandbox_token"
+        ],
+        "title": "HarvestThresholdUpdateRequest",
+        "description": "POST /config/harvest-threshold request body.\n\nBody-field token (NOT Bearer) per the established convention --\nmirrors POST /config/credit-limit. new_threshold_usd is typed str\non the wire so the dashboard can send raw text-input values\nuntouched; the handler coerces to Decimal via Decimal(str(...))\nand never accepts float typing (Rule 1)."
+      },
+      "MCPInventoryQuery": {
+        "properties": {
+          "search_term": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Term",
+            "description": "Natural language search term"
+          },
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category",
+            "description": "Product category filter"
+          },
+          "min_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Price",
+            "description": "Minimum price filter"
+          },
+          "max_price": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price",
+            "description": "Maximum price filter"
+          },
+          "in_stock_only": {
+            "type": "boolean",
+            "title": "In Stock Only",
+            "description": "Only return in-stock items",
+            "default": true
+          },
+          "limit": {
+            "type": "integer",
+            "maximum": 100.0,
+            "minimum": 1.0,
+            "title": "Limit",
+            "description": "Maximum results to return",
+            "default": 10
+          },
+          "include_attributes": {
+            "type": "boolean",
+            "title": "Include Attributes",
+            "description": "Include detailed attributes",
+            "default": true
+          }
+        },
+        "type": "object",
+        "title": "MCPInventoryQuery",
+        "description": "Query from LLM about inventory.\n\nSupports natural language search, category filtering,\nprice ranges, and stock availability checks."
+      },
+      "NegotiateRequest": {
+        "properties": {
+          "requesting_agent_did": {
+            "type": "string",
+            "title": "Requesting Agent Did"
+          },
+          "product_sku": {
+            "type": "string",
+            "title": "Product Sku"
+          },
+          "quantity": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Quantity"
+          },
+          "max_price_per_unit": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Price Per Unit"
+          },
+          "delivery_region": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Delivery Region"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requesting_agent_did",
+          "product_sku",
+          "quantity"
+        ],
+        "title": "NegotiateRequest",
+        "description": "Quote/negotiation request."
+      },
+      "OutboundAddTargetBody": {
+        "properties": {
+          "target_url": {
+            "type": "string",
+            "title": "Target Url",
+            "default": ""
+          },
+          "target_type": {
+            "type": "string",
+            "title": "Target Type",
+            "default": "directory"
+          },
+          "target_name": {
+            "type": "string",
+            "title": "Target Name",
+            "default": ""
+          },
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "OutboundAddTargetBody",
+        "description": "POST /api/outbound/targets request body."
+      },
+      "PriceBandUpdateRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          },
+          "floor_usd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Floor Usd"
+          },
+          "ceiling_usd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ceiling Usd"
+          },
+          "target_usd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Target Usd"
+          },
+          "locked": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Locked"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token"
+        ],
+        "title": "PriceBandUpdateRequest",
+        "description": "POST /config/price-bands/{sku} body."
+      },
+      "ReputationResetRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          },
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token",
+          "buyer_did"
+        ],
+        "title": "ReputationResetRequest",
+        "description": "POST /api/diplomat/reputation/reset body."
+      },
+      "ScoutApproveRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token"
+        ],
+        "title": "ScoutApproveRequest",
+        "description": "POST /api/scout/proposals/{id}/approve body."
+      },
+      "ScoutRejectRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          },
+          "rejection_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rejection Reason",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token"
+        ],
+        "title": "ScoutRejectRequest",
+        "description": "POST /api/scout/proposals/{id}/reject body.\n\nrejection_reason is optional but logged when present."
+      },
+      "ScoutVetoRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token"
+        ],
+        "title": "ScoutVetoRequest",
+        "description": "POST /api/scout/proposals/{id}/veto body."
+      },
+      "SettlementConfirmBody": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token",
+            "default": ""
+          },
+          "execution_id": {
+            "type": "string",
+            "title": "Execution Id",
+            "default": ""
+          },
+          "wise_reference": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Wise Reference"
+          },
+          "confirmation_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confirmation Note"
+          }
+        },
+        "type": "object",
+        "title": "SettlementConfirmBody",
+        "description": "POST /api/settlement/confirm request body (codebase BaseModel convention)."
+      },
+      "StrategistGenerateRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "StrategistGenerateRequest",
+        "description": "POST /api/strategist/briefing/generate body."
+      },
+      "TrialExecuteBody": {
+        "properties": {
+          "trial_id": {
+            "type": "string",
+            "title": "Trial Id",
+            "default": ""
+          },
+          "trial_nonce": {
+            "type": "string",
+            "title": "Trial Nonce",
+            "default": ""
+          },
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "TrialExecuteBody",
+        "description": "POST /api/ap2/trial-execute body (codebase BaseModel convention)."
+      },
+      "TrialGrantBody": {
+        "properties": {
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did",
+            "default": ""
+          },
+          "referral_code": {
+            "type": "string",
+            "title": "Referral Code",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "title": "TrialGrantBody",
+        "description": "POST /api/ap2/trial-grant body (codebase BaseModel convention)."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "WhitelistMutateRequest": {
+        "properties": {
+          "sandbox_token": {
+            "type": "string",
+            "title": "Sandbox Token"
+          },
+          "buyer_did": {
+            "type": "string",
+            "title": "Buyer Did"
+          }
+        },
+        "type": "object",
+        "required": [
+          "sandbox_token",
+          "buyer_did"
+        ],
+        "title": "WhitelistMutateRequest",
+        "description": "POST /api/sentinel/whitelist/{add,remove} body."
+      }
+    }
+  }
+}

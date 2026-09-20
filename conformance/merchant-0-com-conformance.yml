@@ -1,0 +1,150 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.merchant-0.com/openapi.json
+derived_from: openapi/merchant-0-com-openapi.json
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+- https://merchant-0.com/.well-known/ucp-manifest.json
+- https://merchant-0.com/.well-known/did.json
+summary: >-
+  Merchant-0's conformance profile is the agent-commerce protocol stack — and most of it is claimed rather
+  than demonstrated. It claims A2A, AP2, UCP, MCP, DID Web and x402 in its own documents. What the surfaces
+  actually show: a valid W3C did:web document (the one clean conformance), an A2A card that fails a hard
+  check (no protocolVersion), an A2A JSON-RPC route that returns a fixed payload, a UCP manifest whose
+  capability endpoints point at a host that does not resolve, an "MCP" server that is a REST manifest with
+  no MCP transport, an "AP2" flow whose request bodies are bespoke {buyer_did, item_id, quantity} /
+  {contract_id, buyer_signature} objects with none of AP2's mandate structures, and an X-Payment header
+  declared on one operation with no 402 observed. It declares no OAuth/OIDC, no RFC 9457 problem details, no
+  RFC 9116 security.txt, no RFC 9727 API catalog and no RFC 8594 sunset signalling. Compliance identifiers
+  (soc2_type2, gdpr, eu_ai_act) appear only as self-asserted strings in a manifest — no report, no trust
+  center — so no Compliance pointer is emitted.
+standards:
+- id: did-web
+  name: W3C DID Core, did:web method
+  conforms: true
+  domain_standard_signature: true
+  evidence: >-
+    https://merchant-0.com/.well-known/did.json (200, application/json, 463 bytes): {"@context":
+    ["https://www.w3.org/ns/did/v1"], "id": "did:web:merchant-0.com", verificationMethod[0] {id
+    did:web:merchant-0.com#key-1, type Ed25519VerificationKey2020, controller did:web:merchant-0.com,
+    publicKeyMultibase z6Mkt...}, authentication ["...#key-1"], assertionMethod ["...#key-1"], created
+    2026-01-26, updated 2026-04-21}. Served at exactly the location the did:web method resolves for a bare
+    domain, and the same DID appears in the agent card, the UCP manifest, GET /api/ucp/identity and GET
+    /api/catalog. Saved in well-known/merchant-0-com-did.json.
+  note: The DID is the provider's identity for agent commerce and the only contract-level standard declaration that checks out end to end. Whether the key is actually used to sign anything could not be observed.
+- id: openapi-3.1
+  name: OpenAPI 3.1.0
+  conforms: true
+  version: 3.1.0
+  evidence: https://api.merchant-0.com/openapi.json — openapi "3.1.0"; parses; 92 paths, 95 operations, 28 component schemas; info.title "Merchant-0 A2A Protocol Server", info.version "2026.1".
+  gaps:
+  - No servers[] (added by API Evangelist in the refined copy and recorded in overlays/).
+  - No securitySchemes and no security requirements anywhere, although the contract's own descriptions name a CEO sandbox_token, a trial_nonce, a buyer_signature and an X-PoW-Solution header.
+  - No tags; operationIds are FastAPI auto-generated (e.g. ap2_negotiate_alias_api_ap2_negotiate_post).
+  - Only 200 and 422 are declared; 36 of 95 operations declare 200 alone. The 402, 403, 404, 429 and 401 behaviours described in prose and observed live are undeclared.
+  - Operator-internal routes (emergency kill switch, credit limits, price bands, settlement confirmation, agent-council status) are published in the same public document as the buyer surface.
+- id: a2a
+  name: Agent2Agent protocol
+  conforms: false
+  claimed: true
+  evidence: >-
+    a2a/merchant-0-com-agent-card.json — graded flavored: protocolVersion absent (a non-standard
+    protocolVersions ["0.3","1.0"] array instead), capabilities is a SKU map rather than AgentCapabilities,
+    url https://api.merchant-0.com answers 405 to JSON-RPC POST. POST https://api.merchant-0.com/message/send
+    returns a well-formed JSON-RPC 2.0 envelope but the same fixed "acknowledged" result for tasks/get and
+    agent/getAuthenticatedExtendedCard; the OpenAPI describes it as a "registry health / discovery" handler.
+  note: A discovery document and a health stub, not an A2A task surface. Graded in a2a/merchant-0-com-a2a.yml.
+- id: json-rpc-2.0
+  conforms: true
+  verification: partial
+  evidence: 'POST /message/send answers {"jsonrpc":"2.0","id":<echoed>,"result":{...}} with the request id echoed and id null for non-JSON-RPC bodies (per the spec description). It never returns a JSON-RPC error object — unknown methods get the same result — so error semantics are unverified.'
+- id: ap2
+  name: Agent Payments Protocol (AP2)
+  conforms: false
+  claimed: true
+  evidence: >-
+    Claimed in the card (protocols [A2A, UCP, AP2, DID Web 1.0]; settlement.primary "AP2 with Wise USD
+    auto-confirmation"), the legacy card (protocol "AP2", protocol_version "2026.1") and the API banner
+    (protocols.ap2 "2026.1"). The contract's AP2 routes carry bespoke bodies — AP2NegotiateBody {buyer_did,
+    item_id, quantity}, AP2SignBody {contract_id, buyer_signature, buyer_did?}, AP2ExecuteBody {contract_id,
+    query?, dry_run?, target_did?, subscription_id?, report_type?} — and no IntentMandate / CartMandate /
+    PaymentMandate verifiable-credential structures. "2026.1" is the provider's own label, not an AP2 release.
+  note: The name AP2 labels the provider's own negotiate/sign/execute state machine (PENDING -> SIGNED -> EXECUTED). Recorded as claimed, not conformant.
+- id: ucp
+  name: Universal Commerce Protocol (UCP)
+  conforms: false
+  claimed: true
+  evidence: >-
+    /.well-known/ucp-manifest.json served on both hosts with ucp_version "2026.1" and eight capability ids in
+    the dev.ucp.* namespace (dev.ucp.shopping.checkout, dev.ucp.shopping.negotiate, dev.ucp.catalog.search,
+    dev.ucp.catalog.details, dev.ucp.inventory.check, dev.ucp.inventory.reserve, dev.ucp.payments.intent,
+    dev.ucp.payments.execute). Every capability endpoint is https://merchant0.com/api/ucp/... — a domain that
+    does not resolve (NXDOMAIN) — and /.well-known/ucp.json (the UCP-defined path) 404s. The real routes exist
+    on api.merchant-0.com under /api/ucp/* per the OpenAPI.
+  note: A manifest that names an unreachable host cannot be followed by a UCP client. Recorded as claimed.
+- id: mcp
+  name: Model Context Protocol
+  conforms: false
+  claimed: true
+  evidence: 'Homepage claims "MCP - Live - /api/mcp/inventory"; GET /api/mcp/manifest returns a tool manifest with mcp_version "2026.1". JSON-RPC initialize and tools/list POSTed to /api/mcp/inventory, /mcp and /api/mcp on both hosts all returned 404. See mcp/merchant-0-com-mcp.yml.'
+- id: x402
+  name: x402 HTTP payment protocol
+  conforms: false
+  claimed: true
+  evidence: >-
+    Legacy card payment_methods ["AP2", "x402"]. The OpenAPI declares an optional X-Payment header parameter on
+    GET /api/ucp/inventory/check (check_inventory_alias_api_ucp_inventory_check_get) — the x402 header name —
+    but an anonymous GET returned 200 with the catalog, not a 402 PaymentRequirements challenge, and no other
+    route declares the header. The only 402 the contract describes is a proof-of-work challenge for FLAGGED
+    buyers on negotiate (retry with X-PoW-Solution), which is not x402.
+- id: proof-of-work-challenge
+  name: Provider-specific HTTP 402 proof-of-work gate
+  conforms: true
+  verification: documented
+  evidence: 'ap2_negotiate_alias description: "FLAGGED buyers receive an HTTP 402 PoW challenge instead of terms; submit the solution via the X-PoW-Solution request header on a retry." GET /api/publicist/manifest: security.pow_challenge "SHA-256 difficulty 4". Not observed live (no buyer is flagged by a read probe).'
+- id: oauth2
+  conforms: false
+  evidence: No oauth2 securityScheme; /.well-known/oauth-authorization-server 404 on both hosts.
+- id: oidc
+  conforms: false
+  evidence: No openIdConnect securityScheme; /.well-known/openid-configuration 404 on both hosts.
+- id: rfc9728-protected-resource
+  conforms: false
+  evidence: /.well-known/oauth-protected-resource 404 on merchant-0.com and api.merchant-0.com.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: 'Errors are FastAPI {"detail": ...} objects (422 HTTPValidationError with detail[] of {loc, msg, type}; 404 {"detail":"Not Found"}; 405 {"detail":"Method Not Allowed"}; 401 {"detail":"Unauthorized"}). No application/problem+json anywhere.'
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt and /security.txt 404 on both hosts. The UCP manifest names security@merchant0.com — an address on the non-resolving domain.
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog 404 on both hosts.
+- id: apis-json
+  conforms: false
+  evidence: /apis.json, /apis.yml and /.well-known/apis.json 404 on both hosts.
+- id: rfc8594-sunset
+  conforms: false
+  evidence: No Sunset or Deprecation header in any response or description; no deprecated operations.
+- id: pagination
+  conforms: false
+  verification: partial
+  evidence: 'Eight list operations take a bare limit query parameter (get_invoices_cxo_api_invoices_get, get_all_intel_queries_api_intel_get, get_ap2_executions_api_ap2_executions_get, ...); none takes offset, cursor or page, and no response schema documents a next token. Not a pagination convention — a cap.'
+- id: idempotency
+  conforms: false
+  verification: partial
+  evidence: 'ap2_sign_alias description: "Precondition: contract exists and is in PENDING (or already SIGNED, which is idempotent)." No Idempotency-Key header or parameter on any of the 44 write operations. See conventions/ (coverage: partial, scope: one operation).'
+- id: json-schema-2020-12
+  conforms: true
+  evidence: OpenAPI 3.1.0 schemas use anyOf-with-null nullability and title/description per property, the JSON Schema dialect 3.1 mandates; 28 component schemas, all objects.
+compliance_claims_not_credited:
+- claim: vc:compliance:soc2_type2, vc:compliance:gdpr, vc:compliance:eu_ai_act, vc:business_license:2026, vc:payment_processor:stripe
+  where: /.well-known/ucp-manifest.json verifiable_credentials[] and GET /api/ucp/identity
+  why_not_credited: >-
+    Bare string identifiers with no credential body, issuer, report, trust-center page or auditor letter
+    behind them. The same manifest names Stripe as payment processor while every other surface names Wise,
+    and lists regions_served [US, EU, CN, GLOBAL] while the card specialises in SEA/BRICS+. A self-asserted
+    label is not a published compliance program; no Compliance pointer is emitted.
+- claim: '"All 7 Supabase tables have RLS enabled with service_role_full_access policy. Supabase Security Advisor: 0 errors."'
+  where: agent card trust_signals.rls_security
+  why_not_credited: An internal configuration statement, unverifiable from outside and not a standard.

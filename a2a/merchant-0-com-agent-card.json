@@ -1,0 +1,194 @@
+{
+  "protocol": "A2A",
+  "version": "1.0.0",
+  "protocolVersions": ["0.3", "1.0"],
+  "schema": "https://a2a-protocol.org/specification/",
+  "did": "did:web:merchant-0.com",
+  "name": "Merchant-0",
+  "display_name": "Merchant-0 Sovereign AI Merchant",
+  "description": "Sovereign A2A merchant specialized in SEA and BRICS+ corridors. Provides geopolitically aware intelligence, regulatory compliance wrapping, semantic trade data, and coalition access that generalist agents avoid due to alignment constraints.",
+  "mission": "Conductor of logic-bound value flows in SEA and BRICS+ corridors. No inventory held. Profit captured in the arbitrage between physical world trade and its digital shadow. Trust earned through veracity of data oracles.",
+  "url": "https://api.merchant-0.com",
+  "agent_api": "https://api.merchant-0.com",
+  "provider": {
+    "organization": "Merchant-0",
+    "url": "https://merchant-0.com"
+  },
+  "defaultInputModes": ["text"],
+  "defaultOutputModes": ["text"],
+  "skills": [
+    {
+      "id": "sea-intelligence",
+      "name": "SEA Intelligence Query",
+      "description": "Grok-powered intelligence queries for SEA and BRICS+ corridors",
+      "tags": ["intelligence", "grok", "SEA", "BRICS", "gray-zone", "arbitrage", "war-game", "novelty-scan"],
+      "examples": ["Query SEA trade routes", "Analyze gray-zone EV"]
+    },
+    {
+      "id": "sea-report",
+      "name": "SEA Market Intelligence Report",
+      "description": "Formatted multi-section Grok report covering market analysis, risk assessment, opportunities, and recommended actions for SEA and BRICS+ corridors",
+      "tags": ["report", "intelligence", "SEA", "BRICS", "market-analysis", "risk-assessment", "opportunities", "grok"],
+      "examples": ["Generate SEA palm-oil supply-chain report", "Q3 2026 arbitrage opportunities report"]
+    },
+    {
+      "id": "did-verification",
+      "name": "Agent DID Verification",
+      "description": "Verifies any agent DID document against the A2A registry. Returns conformance, agent card data, and health signals.",
+      "tags": ["verification", "DID", "DID Web", "A2A", "conformance", "registry", "trust"],
+      "examples": ["Verify did:web:some-agent.example", "Check A2A registry conformance for a counterparty"]
+    },
+    {
+      "id": "subscription-proof",
+      "name": "Subscription Status Proof",
+      "description": "Signed attestation of an agent subscription status and remaining query quota. Valid 24 hours from issuance.",
+      "tags": ["proof", "attestation", "subscription", "quota", "access-tier", "coalition"],
+      "examples": ["Prove access tier to coalition partner", "Issue 24-hour quota attestation"]
+    }
+  ],
+  "capabilities": {
+    "merchant0-intel-001": {
+      "name": "Grok Frontier Intelligence Query",
+      "type": "intelligence",
+      "pricing": {
+        "model": "per_query",
+        "amount_usd": "0.99",
+        "subscription": {
+          "plan_sku": "merchant0-intel-sub-monthly",
+          "monthly_usd": "49.00",
+          "quota": 200,
+          "covered_price_usd": "0.00"
+        }
+      },
+      "description": "Structured Grok responses for novelty scans, gray-zone EV calculation, war-game scenario trees, and unstructured signal summaries from social feeds, web, and satellite signals. Submit 'query' field in AP2 execute payload. Max 8k tokens input.",
+      "quota_transparency": "Non-subscribers pay per query. Subscribers get 200 queries/month at $0.00. GET /api/subscriptions/{id}/usage for remaining quota."
+    },
+    "merchant0-report-001": {
+      "name": "SEA Market Intelligence Report",
+      "type": "intelligence",
+      "pricing": {
+        "model": "per_report",
+        "amount_usd": "4.90"
+      },
+      "description": "Formatted multi-section Grok market intelligence report for SEA and BRICS+ trade corridors. Includes report_title, executive_summary, market_analysis (current_conditions, price_signals, volume_trends), risk_assessment (primary_risks, risk_level, mitigation_options), opportunities (immediate, medium_term, confidence), regulatory_context, recommended_actions, data_sources, and a validity_window. Submit 'query' field in AP2 execute payload.",
+      "quota_transparency": "Per report. No subscription required. Each report is generated fresh from Grok and persisted to intel_queries; retrievable via GET /api/intel/{execution_id}."
+    },
+    "merchant0-verify-001": {
+      "name": "Agent DID Verification",
+      "type": "verification",
+      "pricing": {
+        "model": "per_check",
+        "amount_usd": "0.25"
+      },
+      "description": "Verifies any agent DID document against the A2A registry. Resolves /.well-known/did.json and /.well-known/agent-card.json (with agent.json fallback) from the target DID domain, then queries a2aregistry.org for conformance and health signals. Returns target_did, did_resolved, did_document_valid, agent_card_found, agent_name, a2a_conformant, is_healthy, verification_timestamp, structured warnings, and verified_by. Submit 'target_did' field in AP2 execute payload.",
+      "quota_transparency": "Per verification check. Verifications are persisted to intel_queries with status='verify_delivered'."
+    },
+    "merchant0-proof-001": {
+      "name": "Subscription Status Proof",
+      "type": "attestation",
+      "pricing": {
+        "model": "per_proof",
+        "amount_usd": "0.05"
+      },
+      "description": "Signed attestation of buyer subscription status and remaining query quota. Returns proof_id, subject_did, issued_by, issued_at, expires_at (24 hours from issuance), subscription (plan_sku/status/usage_count/usage_limit/queries_remaining/next_billing or null if no active sub), lifetime_queries count, proof_hash (sha256 truncated to 32), and merchant_signature. Optional 'subscription_id' in AP2 execute payload; otherwise the most-recent active subscription for the buyer is used. Useful for proving access tier to coalition partners.",
+      "quota_transparency": "Per proof. Valid 24 hours from issuance. Stateless -- each execution generates a fresh proof; not persisted."
+    }
+  },
+  "protocols": ["A2A", "UCP", "AP2", "DID Web 1.0"],
+  "settlement": {
+    "primary": "AP2 with Wise USD auto-confirmation",
+    "label": "Wise USD Settlement Account",
+    "currency": "USD",
+    "auto_confirmation": true
+  },
+  "specialization": {
+    "regions": ["SEA", "PH", "BRICS+", "Geopolitically Fragile Corridors"],
+    "moat": "Risk-averse generalist fleets hesitate on gray-zone, enforcement-lag, and jurisdictionally complex SEA/BRICS+ trades. Merchant-0 operates here natively with Strategist (Grok war-game) gate, subscription usage enforcement, and biometric CEO finality.",
+    "use_cases": [
+      "SEA corridor supply chain intelligence",
+      "PH/BRICS+ regulatory compliance automation",
+      "Gray-zone trade route analysis",
+      "Coalition sourcing and joint negotiation",
+      "Agentic commerce in enforcement-lag jurisdictions"
+    ]
+  },
+  "trust_signals": {
+    "subscription_enforcement": {
+      "status": "live",
+      "description": "Negotiate returns 429 when quota exhausted. Subscribers get $0.00 per covered unit within plan. Usage tracked in Supabase.",
+      "endpoint": "GET /api/subscriptions/{id}/usage"
+    },
+    "strategist_gate": {
+      "status": "live",
+      "description": "High-value deals (>= USD 100) receive Grok war-game analysis before sign/execute. Recommendation in AP2 negotiate response.",
+      "threshold_usd": "100.00"
+    },
+    "invoice_trail": {
+      "status": "live",
+      "description": "Every execution generates a persistent invoice. CEO endpoint: GET /api/invoices."
+    },
+    "wise_auto_confirmation": {
+      "status": "live",
+      "description": "Settlement auto-confirmed via Wise API on execute. settlement_confirmed field in execute response."
+    },
+    "rls_security": {
+      "status": "live",
+      "description": "All 7 Supabase tables have RLS enabled with service_role_full_access policy. Supabase Security Advisor: 0 errors."
+    }
+  },
+  "endpoints": {
+    "message_send": "https://api.merchant-0.com/message/send",
+    "catalog": "https://api.merchant-0.com/api/catalog",
+    "negotiate": "https://api.merchant-0.com/api/ap2/negotiate",
+    "sign": "https://api.merchant-0.com/api/ap2/sign",
+    "execute": "https://api.merchant-0.com/api/ap2/execute",
+    "inventory": "https://api.merchant-0.com/api/ucp/inventory/check",
+    "usage": "https://api.merchant-0.com/api/subscriptions/{id}/usage",
+    "agent_card": "https://merchant-0.com/.well-known/agent-card.json",
+    "agent_card_legacy": "https://merchant-0.com/.well-known/agent.json",
+    "ucp_manifest": "https://merchant-0.com/.well-known/ucp-manifest.json",
+    "did_document": "https://merchant-0.com/.well-known/did.json"
+  },
+  "authentication": {
+    "methods": ["DID Web", "AP2 buyer_signature"],
+    "did": "did:web:merchant-0.com"
+  },
+  "subscription_plans": [
+    {
+      "sku": "merchant0-intel-sub-monthly",
+      "name": "Grok Intelligence Unlimited",
+      "monthly_usd": "49.00",
+      "quota": 200,
+      "unit": "queries",
+      "covers": ["merchant0-intel-001"],
+      "status": "active"
+    },
+    {
+      "sku": "merchant0-compliance-sub-monthly",
+      "name": "SEA Compliance Unlimited",
+      "monthly_usd": "99.00",
+      "quota": 50,
+      "unit": "sessions",
+      "covers": [],
+      "status": "future",
+      "note": "Subscription infrastructure reserved for a future SEA regulatory compliance product. No per-execution SKU is currently delivered under this plan."
+    },
+    {
+      "sku": "merchant0-wolfpack-sub-monthly",
+      "name": "Wolf Pack Dedicated Clone",
+      "monthly_usd": "399.00",
+      "quota": 1,
+      "unit": "slots",
+      "covers": [],
+      "status": "future",
+      "note": "Subscription infrastructure reserved for the future Wolf Pack coalition slot product. No per-execution SKU is currently delivered under this plan."
+    }
+  ],
+  "contact": {
+    "did": "did:web:merchant-0.com",
+    "wise": "https://wise.com/pay/business/merchant0"
+  },
+  "created": "2026-04-10",
+  "updated": "2026-05-20T00:00:00Z",
+  "status": "active"
+}

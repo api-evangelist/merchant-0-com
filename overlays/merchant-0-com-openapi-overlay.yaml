@@ -1,0 +1,432 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Merchant-0 A2A Protocol Server
+  version: 1.0.0
+  x-generated: '2026-09-19'
+  x-method: generated
+extends: openapi/_original/merchant-0-com-openapi-original.json
+actions:
+- target: $.info
+  update:
+    x-apievangelist:
+      generated: '2026-09-19'
+      provenance: Harvested verbatim from https://api.merchant-0.com/openapi.json on 2026-09-19 (openapi/_original/). This overlay records every
+        change API Evangelist made in the refined copy; the original is untouched.
+      ownership: info.title "Merchant-0 A2A Protocol Server"; served from the host the provider's A2A agent card names as agent_api; GET /api/catalog
+        on it returns merchant_did did:web:merchant-0.com.
+- target: $
+  description: The harvested document declares no servers[]. The host is the one the spec is served from and the agent card names as url/agent_api.
+  update:
+    servers:
+    - url: https://api.merchant-0.com
+      description: Production (added by API Evangelist; not in the provider document).
+- target: $
+  description: The harvested document declares no tags. Group the 95 operations by surface so a reader can separate the buyer-facing commerce
+    routes from the operator control plane the provider publishes in the same document.
+  update:
+    tags:
+    - name: A2A
+    - name: AP2 Commerce
+    - name: UCP
+    - name: MCP Manifest
+    - name: Catalog and Discovery
+    - name: Subscriptions, Trials and Deliverables
+    - name: Inbound Webhooks
+    - name: Service
+    - name: Operator Control Plane
+- target: $.paths['/api/ap2/negotiate'].post
+  description: Undeclared responses the provider documents in prose (see errors/merchant-0-com-problem-types.yml).
+  update:
+    x-apievangelist-undeclared-responses:
+      '402': Proof-of-work challenge for FLAGGED buyers; retry with X-PoW-Solution header
+      '403': sentinel_blocked — semantic firewall matched an injection pattern
+      '404': Unknown item_id (SKU)
+      '429': Subscription quota exhausted (agent card trust_signals.subscription_enforcement)
+- target: $.paths['/api/ap2/sign'].post
+  update:
+    x-apievangelist-idempotent: true
+    x-apievangelist-note: '"already SIGNED, which is idempotent" — the only documented idempotent write in the contract.'
+- target: $.paths['/api/ap2/execute'].post
+  update:
+    x-apievangelist-dry-run-field: dry_run
+    x-apievangelist-reversibility: none — no cancel/refund/void operation; dispute via POST /api/ap2/dispute; no window stated
+- target: $.paths['/'].get
+  update:
+    tags:
+    - Service
+- target: $.paths['/message/send'].post
+  update:
+    tags:
+    - A2A
+- target: $.paths['/health'].get
+  update:
+    tags:
+    - Service
+- target: $.paths['/.well-known/ucp-manifest.json'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/capabilities'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/identity'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/catalog/search'].post
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/catalog/search'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/catalog/details/{sku}'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/inventory/check/{sku}'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/negotiate'].post
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/mcp/manifest'].get
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/mcp/tools'].get
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/mcp/resources'].get
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/mcp/inventory/search'].post
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/mcp/categories'].get
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/ap2/intent'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/sign/{intent_id}'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/execute/{cart_id}'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/cart/{cart_id}'].get
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/stats'].get
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ucp/checkout'].post
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/dashboard/a2a'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/catalog'].get
+  update:
+    tags:
+    - Catalog and Discovery
+- target: $.paths['/api/ap2/executions'].get
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/review/{contract_id}'].get
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/reviews'].get
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/review/{path_id}/approve'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/review/{path_id}/reject'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/invoices'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/subscriptions'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/subscriptions/{subscription_id}/usage'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/subscriptions/renew'].post
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/ucp/manifest'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/ucp/inventory/check'].get
+  update:
+    tags:
+    - UCP
+- target: $.paths['/api/mcp/capabilities'].get
+  update:
+    tags:
+    - MCP Manifest
+- target: $.paths['/api/ap2/negotiate'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/sign'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/execute'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/intel'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/intel/{execution_id}'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/harvest/history'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/bank/usd-balance'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/credit-health'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/sandbox/state'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/config/credit-limit'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/config/harvest-threshold'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/config/harvest-threshold'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/credit/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/webhooks/wise'].post
+  update:
+    tags:
+    - Inbound Webhooks
+- target: $.paths['/emergency/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/emergency/kill-switch/arm'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/emergency/kill-switch/activate'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/emergency/evacuate/initiate'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/scout/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/scout/proposals'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/scout/proposals/{proposal_id}/approve'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/scout/proposals/{proposal_id}/reject'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/scout/proposals/{proposal_id}/veto'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/technologist/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/config/price-bands'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/config/price-bands/{sku}'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/treasurer/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/diplomat/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/diplomat/reputation/reset'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/ap2/dispute'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/advocate/disputes'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/advocate/disputes/{dispute_id}/resolve'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/advocate/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/sentinel/whitelist/add'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/sentinel/whitelist/remove'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/sentinel/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/strategist/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/strategist/briefing'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/strategist/briefing/generate'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/publicist/manifest'].get
+  update:
+    tags:
+    - Catalog and Discovery
+- target: $.paths['/api/publicist/catalog'].get
+  update:
+    tags:
+    - Catalog and Discovery
+- target: $.paths['/api/publicist/status'].get
+  update:
+    tags:
+    - Catalog and Discovery
+- target: $.paths['/api/subscriptions/delivery'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/subscriptions/delivery/status'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/settlement/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/settlement/records'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/settlement/confirm'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/discovery/hit'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/discovery/funnel'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/discovery/registry-package'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/outbound/status'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/outbound/targets'].get
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/outbound/targets'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/outbound/run'].post
+  update:
+    tags:
+    - Operator Control Plane
+- target: $.paths['/api/ap2/trial-grant'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/ap2/trial-execute'].post
+  update:
+    tags:
+    - AP2 Commerce
+- target: $.paths['/api/trial/status'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/subscription/referral-code'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables
+- target: $.paths['/api/subscription/growth-stats'].get
+  update:
+    tags:
+    - Subscriptions, Trials and Deliverables

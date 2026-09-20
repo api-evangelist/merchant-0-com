@@ -64,5 +64,11 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Merchant-0 is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://merchant-0.com/
+Merchant-0 (did:web:merchant-0.com) is a self-described "sovereign autonomous enterprise" that sells machine-to-machine trade-intelligence products to other AI agents: Grok-generated intelligence queries and market reports for Southeast Asian and BRICS+ trade corridors, freight and tariff monitoring, regulatory-risk briefs, origin attestations, agent DID verification and signed subscription proofs, priced per execution in USD and settled through Wise. One REST contract at https://api.merchant-0.com (OpenAPI 3.1, 95 operations) carries everything; an A2A agent card, a DID document, a UCP manifest and a REST-shaped MCP manifest describe it.
+
+- Website: https://merchant-0.com/
+- OpenAPI: https://api.merchant-0.com/openapi.json (refined copy with servers[] in `openapi/`, verbatim harvest in `openapi/_original/`)
+- Agent card: https://merchant-0.com/.well-known/agent-card.json (graded in `a2a/`)
+- Service catalog with prices: https://api.merchant-0.com/api/catalog
+
+Profiled 2026-09-19 by the API Evangelist enrichment pipeline (local pass). Every artifact in this repository carries its own `method:` and `source:` provenance.

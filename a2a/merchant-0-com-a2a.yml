@@ -1,0 +1,178 @@
+generated: '2026-09-19'
+method: probed
+source: https://merchant-0.com/.well-known/agent-card.json
+card:
+  file: a2a/merchant-0-com-agent-card.json
+  legacy_file: a2a/merchant-0-com-agent-card-legacy.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: merchant-0.com
+  note: >-
+    Served from the apex host (Next.js, nginx 1.24 on Ubuntu; Last-Modified Tue, 30 Jun 2026). The legacy
+    /.well-known/agent.json ALSO answers 200 on the same host with a DIFFERENT, older document (schema_version
+    1.0, protocol AP2, updated 2026-04-27) — saved beside the canonical card as the legacy file and graded
+    below. www.merchant-0.com does not resolve (NXDOMAIN). api.merchant-0.com, the host the card names as
+    url/agent_api, returns a real JSON 404 ({"detail":"Not Found"}) for both card paths. A negative-control
+    path (/.well-known/apievangelist-negative-control-7f3a9c.json) returns a real 404 on both hosts — the
+    apex serves a Next.js "404: This page could not be found" HTML page with status 404, not a 200 shell —
+    so the 200s on the card paths are served documents, not a catch-all. Ownership is not in question: the
+    card's provider.organization is "Merchant-0" with provider.url https://merchant-0.com, its did is
+    did:web:merchant-0.com and the DID document at /.well-known/did.json carries the same id, the OpenAPI
+    served from the card's agent_api host titles itself "Merchant-0 A2A Protocol Server", and
+    GET https://api.merchant-0.com/api/catalog returns merchant_did did:web:merchant-0.com.
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://merchant-0.com/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=UTF-8
+  body_bytes: 10318
+  body_parses_as: >-
+    JSON object with AgentCard-adjacent shape (name, url, version, capabilities, skills, provider,
+    defaultInputModes, defaultOutputModes present; protocolVersion absent)
+  corroborating_probes:
+  - url: https://merchant-0.com/.well-known/agent.json
+    http_status: 200
+    content_type: application/json
+    body_bytes: 1770
+    note: A second, older discovery document (AP2-shaped, no skills). Saved verbatim as the legacy file.
+  - url: https://api.merchant-0.com/.well-known/agent-card.json
+    http_status: 404
+  - url: https://api.merchant-0.com/.well-known/agent.json
+    http_status: 404
+  - url: https://www.merchant-0.com/.well-known/agent-card.json
+    http_status: 0
+    note: NXDOMAIN — no www host exists.
+  - url: https://merchant-0.com/.well-known/did.json
+    http_status: 200
+    note: W3C DID document for did:web:merchant-0.com (Ed25519VerificationKey2020, created 2026-01-26, updated 2026-04-21). Saved in well-known/.
+  - url: https://api.merchant-0.com/
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"message/send","params":{}}'
+    http_status: 405
+    response: '{"detail":"Method Not Allowed"}'
+    note: The card's url (https://api.merchant-0.com) does not accept JSON-RPC POSTs. GET on it returns a service banner {"status":"operational","service":"Merchant-0 A2A Protocol Server","protocols":{"ucp":"2026.1","mcp":"2026.1","ap2":"2026.1"}}.
+  - url: https://api.merchant-0.com/message/send
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{"id":"apievangelist-nonexistent-probe"}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"result":{"status":"acknowledged","agent":"did:web:merchant-0.com","role":"commerce_conductor","capabilities":["catalog_discovery","ap2_negotiate","ap2_sign","ap2_execute","ucp_manifest","sea_compliance_wrapper","geopolitical_intelligence","subscription_commerce"],"recommended_next_actions":{"discover_services":"GET https://api.merchant-0.com/api/catalog","initiate_transaction":"POST https://api.merchant-0.com/api/ap2/negotiate", ...}}}'
+    note: >-
+      A well-formed JSON-RPC 2.0 envelope, but NOT an A2A task engine: the OpenAPI describes this route as a
+      "Minimal JSON-RPC 2.0 handler for A2A message/send (registry health / discovery)" that "returns a fixed
+      payload; always HTTP 200". A tasks/get for an unknown id did not return the A2A -32001 TaskNotFound
+      error, and agent/getAuthenticatedExtendedCard returned the identical acknowledgement payload. No message
+      was sent and nothing was purchased.
+  - url: https://a2aregistry.org
+    note: >-
+      The provider entered the harvest backlog from the a2aregistry.org listing (the card's own did-verification
+      skill also queries that registry). The card above was fetched directly from the provider's host.
+agent_card:
+  name: Merchant-0
+  display_name: Merchant-0 Sovereign AI Merchant
+  description: >-
+    Sovereign A2A merchant specialized in SEA and BRICS+ corridors. Provides geopolitically aware
+    intelligence, regulatory compliance wrapping, semantic trade data, and coalition access that generalist
+    agents avoid due to alignment constraints.
+  url: https://api.merchant-0.com
+  version: 1.0.0
+  protocol_version: null
+  protocol_versions_declared: ['0.3', '1.0']
+  preferred_transport: null
+  provider:
+    organization: Merchant-0
+    url: https://merchant-0.com
+  did: did:web:merchant-0.com
+  default_input_modes: [text]
+  default_output_modes: [text]
+  security_schemes: null
+  security: null
+  authentication_block: {methods: [DID Web, AP2 buyer_signature], did: did:web:merchant-0.com}
+  documentation_url: null
+  icon_url: null
+  skill_count: 4
+  skills:
+  - {id: sea-intelligence, name: SEA Intelligence Query, tags: [intelligence, grok, SEA, BRICS, gray-zone, arbitrage, war-game, novelty-scan], sku: merchant0-intel-001, price_stated: 'USD 0.99 per query in the card; USD 2.99 per query in GET /api/catalog on 2026-09-19'}
+  - {id: sea-report, name: SEA Market Intelligence Report, tags: [report, intelligence, SEA, BRICS, market-analysis, risk-assessment, opportunities, grok], sku: merchant0-report-001, price_stated: USD 4.90 per report}
+  - {id: did-verification, name: Agent DID Verification, tags: [verification, DID, DID Web, A2A, conformance, registry, trust], sku: merchant0-verify-001, price_stated: USD 0.25 per check}
+  - {id: subscription-proof, name: Subscription Status Proof, tags: [proof, attestation, subscription, quota, access-tier, coalition], sku: merchant0-proof-001, price_stated: USD 0.05 per proof}
+  skill_invocation: >-
+    None of the four skills is invoked through A2A messages. Each capability description says "Submit 'query'
+    (or 'target_did' / 'subscription_id') field in AP2 execute payload": the buyer negotiates the SKU at
+    POST /api/ap2/negotiate, signs at POST /api/ap2/sign, executes at POST /api/ap2/execute with the
+    skill-specific field, and reads the deliverable from GET /api/intel/{execution_id}. The skill ids are
+    labels for catalog SKUs (see mcp/merchant-0-com-tool-crosswalk.yml).
+  non_standard_blocks: [protocol, protocolVersions, schema, did, display_name, mission, agent_api, protocols, settlement, specialization, trust_signals, endpoints, authentication, subscription_plans, contact, created, updated, status]
+conformance:
+  spec: A2A 1.0.0
+  grade: flavored
+  protocol_version: null
+  preferred_transport: null
+  hard_checks:
+    capabilities_is_object: true
+    protocol_version_present: false
+    skills_is_array: true
+  optional_fields:
+    default_input_modes: true
+    default_output_modes: true
+    preferred_transport: false
+  grade_basis: >-
+    Graded against the A2A 1.0.0 hard checks. protocolVersion is ABSENT — the card carries "version":
+    "1.0.0" (the agent's own version) and a non-standard "protocolVersions": ["0.3","1.0"] array, and a
+    reader looking for the field the spec defines finds nothing — so the card fails a hard check and is
+    graded flavored. capabilities IS an object, so that check passes mechanically, but it is a map of four
+    SKU ids to priced offerings ({"merchant0-intel-001": {name, type, pricing, description}}), not the A2A
+    AgentCapabilities shape (streaming / pushNotifications / stateTransitionHistory / extensions); a client
+    reading capabilities.streaming gets undefined. skills is an array of four well-formed skills (id, name,
+    description, tags, examples). defaultInputModes/defaultOutputModes are present but hold "text" rather
+    than MIME types. No preferredTransport, no supportedInterfaces/additionalInterfaces, no securitySchemes,
+    no signatures.
+  deviations:
+  - field: protocolVersion
+    observed: 'absent; "protocolVersions": ["0.3","1.0"] and "version": "1.0.0" instead'
+    note: Hard failure. The plural array is not a field A2A 0.3 or 1.0 defines.
+  - field: capabilities
+    observed: an object keyed by SKU id (merchant0-intel-001, -report-001, -verify-001, -proof-001) with name/type/pricing/description/quota_transparency
+    note: Passes the is-object check but is not the AgentCapabilities schema; the standard booleans are all absent.
+  - field: url
+    observed: https://api.merchant-0.com — answers 405 to POST
+    note: >-
+      The only JSON-RPC responder is POST https://api.merchant-0.com/message/send, advertised under the
+      non-standard endpoints.message_send key. An A2A client that POSTs to the card's url fails; one that
+      reaches /message/send gets a fixed acknowledgement for every method.
+  - field: preferredTransport / supportedInterfaces
+    observed: absent
+  - field: securitySchemes / security
+    observed: absent; a non-standard authentication block lists "DID Web" and "AP2 buyer_signature"
+    note: Neither is an A2A security scheme; the REST contract declares no securitySchemes either (see authentication/).
+  - field: defaultInputModes / defaultOutputModes
+    observed: ["text"]
+    note: Not MIME types (text/plain or application/json).
+  - field: skills[].inputModes / outputModes / security
+    observed: absent on every skill
+  - field: pricing consistency
+    observed: capabilities.merchant0-intel-001.pricing.amount_usd "0.99" vs GET /api/catalog price_usd "2.99" for the same SKU (2026-09-19)
+    note: The card (updated 2026-05-20) and the live catalog disagree on the headline price; the catalog is the surface negotiate prices from.
+  - field: endpoints.ucp_manifest / endpoints.did_document
+    observed: both served (200) at the stated apex paths
+    note: Recorded as a positive; the UCP manifest's own capability endpoints point at merchant0.com (no hyphen), which does not resolve — see well-known/.
+legacy_card:
+  file: a2a/merchant-0-com-agent-card-legacy.json
+  path: /.well-known/agent.json
+  canonical: false
+  grade: flavored
+  hard_checks: {capabilities_is_object: false, protocol_version_present: false, skills_is_array: false}
+  note: >-
+    An AP2-shaped discovery document rather than an A2A card: schema_version "1.0", protocol "AP2",
+    protocol_version "2026.1", capabilities as an ARRAY of four strings (intelligence, data, commerce,
+    agent_coalition), no skills, payment_methods [AP2, x402], jurisdiction "PH", settlement Wise/USD. Its
+    catalog_summary lists SKUs (merchant0-compliance-001, merchant0-data-001, merchant0-agent-001) that the
+    live GET /api/catalog no longer carries, and prices merchant0-intel-001 at USD 0.99. Updated 2026-04-27;
+    superseded by the canonical card (updated 2026-05-20) but still served.
+surface_relationship:
+  note: >-
+    Merchant-0 has one real machine surface — the REST contract at api.merchant-0.com — and three discovery
+    documents that describe it: the A2A card (four skills = four catalog SKUs), the UCP manifest (eight
+    dev.ucp.* capabilities whose endpoints name an unresolvable host), and a REST-shaped MCP manifest for a
+    separate MRO product catalog (see mcp/merchant-0-com-mcp.yml). A2A message/send is a discovery stub;
+    there is no MCP-protocol endpoint; every purchase is an AP2-labelled REST call sequence.

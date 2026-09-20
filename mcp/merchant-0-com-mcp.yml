@@ -1,0 +1,97 @@
+generated: '2026-09-19'
+method: probed
+status: candidate
+source: https://api.merchant-0.com/api/mcp/manifest
+summary: >-
+  Merchant-0 advertises "MCP - Live - Model Context Protocol - LLM inventory access (GEO optimized) -
+  /api/mcp/inventory" on its homepage, and its OpenAPI declares five /api/mcp/* routes, but NO MCP-protocol
+  server exists: there is no endpoint that answers JSON-RPC initialize or tools/list, no stdio package, and
+  no server card. What the provider publishes is a REST-shaped tool manifest — GET /api/mcp/manifest (also
+  /api/mcp/capabilities) returns {mcp_version "2026.1", server_id "mcp://merchant0.com/inventory", name
+  "Merchant-0 Inventory Server", tools[3] with input_schema, resources[2]} and GET /api/mcp/tools returns the
+  same three tools — for an industrial MRO product catalog (fasteners, sensors, safety, electrical,
+  pneumatics) that is a different product line from the A2A intelligence catalog. Because the tool list and
+  input schemas are the provider's own, they are saved verbatim in mcp/merchant-0-com-mcp-manifest.json; because
+  no MCP client can connect to anything, deployment.mode is none and no endpoint is recorded. An agent that
+  wants these tools calls the REST operations they wrap (see mcp/merchant-0-com-tool-crosswalk.yml).
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+  note: >-
+    Every path the provider names or that the protocol conventionally uses was POSTed a JSON-RPC 2.0
+    tools/list (Accept: application/json, text/event-stream) and an initialize on 2026-09-19:
+    https://api.merchant-0.com/api/mcp/inventory -> 404 {"detail":"Not Found"};
+    https://api.merchant-0.com/mcp -> 404; https://api.merchant-0.com/api/mcp -> 404;
+    https://merchant-0.com/api/mcp/inventory, /mcp, /api/mcp -> 404 (Next.js HTML 404). The homepage's
+    "/api/mcp/inventory" path does not exist on either host; the OpenAPI's nearest route is POST
+    /api/mcp/inventory/search, a plain REST call. No endpoint URL is recorded because none was verified,
+    and a guessed one would read as an agent surface that does not exist.
+probe:
+  fetched: '2026-09-19'
+  manifest:
+    url: https://api.merchant-0.com/api/mcp/manifest
+    http_status: 200
+    content_type: application/json
+    bytes: 2626
+    file: mcp/merchant-0-com-mcp-manifest.json
+    mcp_version_declared: '2026.1'
+    note: '"2026.1" is not an MCP protocol revision (MCP revisions are dated, e.g. 2025-06-18); it is the provider''s own version label, shared with its UCP and AP2 fields.'
+  tools_list_rest:
+    url: https://api.merchant-0.com/api/mcp/tools
+    http_status: 200
+    tool_count: 3
+  resources_list_rest:
+    url: https://api.merchant-0.com/api/mcp/resources
+    http_status: 200
+    resource_count: 2
+    note: Resource URIs are mcp://merchant0.com/inventory/catalog and .../categories — the no-hyphen domain that does not resolve.
+  categories_rest:
+    url: https://api.merchant-0.com/api/mcp/categories
+    http_status: 200
+    body: '{"categories":["fasteners","sensors","safety","electrical","pneumatics"]}'
+  jsonrpc_tools_list:
+  - {url: 'https://api.merchant-0.com/api/mcp/inventory', method: POST, http_status: 404}
+  - {url: 'https://api.merchant-0.com/mcp', method: POST, http_status: 404}
+  - {url: 'https://api.merchant-0.com/api/mcp', method: POST, http_status: 404}
+  - {url: 'https://merchant-0.com/api/mcp/inventory', method: POST, http_status: 404}
+  - {url: 'https://merchant-0.com/mcp', method: POST, http_status: 404}
+  - {url: 'https://merchant-0.com/api/mcp', method: POST, http_status: 404}
+  jsonrpc_initialize:
+  - {url: 'https://api.merchant-0.com/api/mcp/inventory', method: POST, http_status: 404}
+  well_known:
+  - {url: 'https://merchant-0.com/.well-known/mcp.json', http_status: 404}
+  - {url: 'https://api.merchant-0.com/.well-known/mcp/server-card.json', http_status: 404}
+  - {url: 'https://api.merchant-0.com/.well-known/oauth-protected-resource', http_status: 404}
+server:
+  name: Merchant-0 Inventory Server
+  transport: null
+  url: null
+  vendor: Merchant-0
+  server_id_declared: mcp://merchant0.com/inventory
+  description: Industrial B2B product catalog with GEO-optimized metadata. Search fasteners, sensors, pneumatics, safety equipment, and more.
+tools:
+- name: search_inventory
+  description: Search product catalog with natural language. Returns GEO-optimized product data for AI reasoning.
+  input_schema_ref: mcp/merchant-0-com-mcp-manifest.json#/tools/0/input_schema
+  inputs: [search_term, category, min_price, max_price, in_stock_only (default true), limit (1-100, default 10), include_attributes (default true)]
+  source_operation: openapi/merchant-0-com-openapi.json#mcp_inventory_search_api_mcp_inventory_search_post
+- name: get_product
+  description: Get detailed product information by SKU
+  input_schema_ref: mcp/merchant-0-com-mcp-manifest.json#/tools/1/input_schema
+  inputs: [sku (required)]
+  source_operation: openapi/merchant-0-com-openapi.json#get_product_details_api_ucp_catalog_details__sku__get
+- name: check_availability
+  description: Check real-time stock availability
+  input_schema_ref: mcp/merchant-0-com-mcp-manifest.json#/tools/2/input_schema
+  inputs: [sku (required), quantity (required, minimum 1)]
+  source_operation: openapi/merchant-0-com-openapi.json#check_inventory_api_ucp_inventory_check__sku__get
+resources:
+- {uri: 'mcp://merchant0.com/inventory/catalog', name: Product Catalog, mime_type: application/json}
+- {uri: 'mcp://merchant0.com/inventory/categories', name: Category List, mime_type: application/json}
+authorship:
+  first_party: true
+  basis: Served from the provider's own API host, vendor "Merchant-0", tool inputs match the OpenAPI's MCPInventoryQuery schema verbatim; no shared-platform fingerprint.

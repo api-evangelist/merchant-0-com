@@ -1,0 +1,1190 @@
+generated: '2026-09-19'
+method: generated
+source: openapi/merchant-0-com-openapi.json
+description: Recommended x-agentic-access execution contracts, classified heuristically from
+  the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
+  audience per deployment. See research/curity/agentic-governance/.
+summary:
+  operations: 95
+  by_action_class:
+    connected: 59
+    acting: 36
+  by_consequence:
+    read: 59
+    physical: 3
+    write: 29
+    safety-critical: 4
+  human_in_the_loop_required: 4
+operations:
+- path: /
+  method: get
+  operationId: root__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /message/send
+  method: post
+  operationId: a2a_message_send_message_send_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /health
+  method: get
+  operationId: health_health_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /.well-known/ucp-manifest.json
+  method: get
+  operationId: get_ucp_manifest__well_known_ucp_manifest_json_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/capabilities
+  method: get
+  operationId: list_capabilities_api_ucp_capabilities_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/identity
+  method: get
+  operationId: get_identity_api_ucp_identity_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/catalog/search
+  method: post
+  operationId: search_catalog_api_ucp_catalog_search_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ucp/catalog/search
+  method: get
+  operationId: search_catalog_api_ucp_catalog_search_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/catalog/details/{sku}
+  method: get
+  operationId: get_product_details_api_ucp_catalog_details__sku__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/inventory/check/{sku}
+  method: get
+  operationId: check_inventory_api_ucp_inventory_check__sku__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/negotiate
+  method: post
+  operationId: negotiate_quote_api_ucp_negotiate_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/mcp/manifest
+  method: get
+  operationId: get_mcp_manifest_api_mcp_manifest_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/mcp/tools
+  method: get
+  operationId: list_mcp_tools_api_mcp_tools_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/mcp/resources
+  method: get
+  operationId: list_mcp_resources_api_mcp_resources_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/mcp/inventory/search
+  method: post
+  operationId: mcp_inventory_search_api_mcp_inventory_search_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/mcp/categories
+  method: get
+  operationId: get_categories_api_mcp_categories_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/intent
+  method: post
+  operationId: submit_intent_api_ap2_intent_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/sign/{intent_id}
+  method: post
+  operationId: sign_cart_api_ap2_sign__intent_id__post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/execute/{cart_id}
+  method: post
+  operationId: execute_payment_api_ap2_execute__cart_id__post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/cart/{cart_id}
+  method: get
+  operationId: get_cart_api_ap2_cart__cart_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/stats
+  method: get
+  operationId: get_ap2_stats_api_ap2_stats_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/checkout
+  method: post
+  operationId: checkout_api_ucp_checkout_post
+  x-agentic-access:
+    action-class: acting
+    consequence: physical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 300
+      exchange: true
+      purpose-required: true
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/dashboard/a2a
+  method: get
+  operationId: get_dashboard_data_api_dashboard_a2a_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/catalog
+  method: get
+  operationId: get_service_catalog_api_catalog_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/executions
+  method: get
+  operationId: get_ap2_executions_api_ap2_executions_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/review/{contract_id}
+  method: get
+  operationId: get_ap2_review_status_api_ap2_review__contract_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/reviews
+  method: get
+  operationId: get_ap2_reviews_ceo_api_ap2_reviews_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/review/{path_id}/approve
+  method: post
+  operationId: ap2_review_approve_api_ap2_review__path_id__approve_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/review/{path_id}/reject
+  method: post
+  operationId: ap2_review_reject_api_ap2_review__path_id__reject_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/invoices
+  method: get
+  operationId: get_invoices_cxo_api_invoices_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions
+  method: get
+  operationId: get_subscriptions_cxo_api_subscriptions_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/{subscription_id}/usage
+  method: get
+  operationId: get_subscription_usage_by_id_api_subscriptions__subscription_id__usage_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/renew
+  method: post
+  operationId: trigger_renewal_manually_api_subscriptions_renew_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ucp/manifest
+  method: get
+  operationId: get_ucp_manifest_alias_api_ucp_manifest_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ucp/inventory/check
+  method: get
+  operationId: check_inventory_alias_api_ucp_inventory_check_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/mcp/capabilities
+  method: get
+  operationId: get_mcp_capabilities_alias_api_mcp_capabilities_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/ap2/negotiate
+  method: post
+  operationId: ap2_negotiate_alias_api_ap2_negotiate_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/sign
+  method: post
+  operationId: ap2_sign_alias_api_ap2_sign_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/execute
+  method: post
+  operationId: ap2_execute_alias_api_ap2_execute_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/intel
+  method: get
+  operationId: get_all_intel_queries_api_intel_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/intel/{execution_id}
+  method: get
+  operationId: get_intel_result_api_intel__execution_id__get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /harvest/history
+  method: get
+  operationId: get_harvest_history_harvest_history_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /bank/usd-balance
+  method: get
+  operationId: get_usd_balance_bank_usd_balance_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /credit-health
+  method: get
+  operationId: get_credit_health_credit_health_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /sandbox/state
+  method: get
+  operationId: get_sandbox_state_sandbox_state_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /config/credit-limit
+  method: post
+  operationId: update_credit_limit_config_credit_limit_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /config/harvest-threshold
+  method: get
+  operationId: get_harvest_threshold_config_config_harvest_threshold_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /config/harvest-threshold
+  method: post
+  operationId: update_harvest_threshold_config_harvest_threshold_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/credit/status
+  method: get
+  operationId: get_credit_status_endpoint_api_credit_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/webhooks/wise
+  method: post
+  operationId: wise_webhook_receiver_api_webhooks_wise_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /emergency/status
+  method: get
+  operationId: get_emergency_status_emergency_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /emergency/kill-switch/arm
+  method: post
+  operationId: arm_kill_switch_emergency_kill_switch_arm_post
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /emergency/kill-switch/activate
+  method: post
+  operationId: activate_kill_switch_emergency_kill_switch_activate_post
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /emergency/evacuate/initiate
+  method: post
+  operationId: initiate_evacuation_emergency_evacuate_initiate_post
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/scout/status
+  method: get
+  operationId: get_scout_status_api_scout_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/scout/proposals
+  method: get
+  operationId: list_scout_proposals_api_scout_proposals_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/scout/proposals/{proposal_id}/approve
+  method: post
+  operationId: approve_scout_proposal_api_scout_proposals__proposal_id__approve_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/scout/proposals/{proposal_id}/reject
+  method: post
+  operationId: reject_scout_proposal_api_scout_proposals__proposal_id__reject_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/scout/proposals/{proposal_id}/veto
+  method: post
+  operationId: veto_scout_proposal_api_scout_proposals__proposal_id__veto_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/technologist/status
+  method: get
+  operationId: get_technologist_status_api_technologist_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /config/price-bands
+  method: get
+  operationId: get_price_bands_config_config_price_bands_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /config/price-bands/{sku}
+  method: post
+  operationId: update_price_band_config_config_price_bands__sku__post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/treasurer/status
+  method: get
+  operationId: get_treasurer_status_api_treasurer_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/diplomat/status
+  method: get
+  operationId: get_diplomat_status_api_diplomat_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/diplomat/reputation/reset
+  method: post
+  operationId: diplomat_reputation_reset_api_diplomat_reputation_reset_post
+  x-agentic-access:
+    action-class: acting
+    consequence: safety-critical
+    subject: required
+    audience: null
+    token:
+      max-ttl: 120
+      exchange: true
+      purpose-required: true
+      proof-of-possession: true
+    escalation:
+      human-in-the-loop: required
+    audit: required
+- path: /api/ap2/dispute
+  method: post
+  operationId: ap2_dispute_file_api_ap2_dispute_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/advocate/disputes
+  method: get
+  operationId: get_advocate_disputes_api_advocate_disputes_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/advocate/disputes/{dispute_id}/resolve
+  method: post
+  operationId: resolve_advocate_dispute_api_advocate_disputes__dispute_id__resolve_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/advocate/status
+  method: get
+  operationId: get_advocate_status_api_advocate_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/sentinel/whitelist/add
+  method: post
+  operationId: sentinel_whitelist_add_api_sentinel_whitelist_add_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/sentinel/whitelist/remove
+  method: post
+  operationId: sentinel_whitelist_remove_api_sentinel_whitelist_remove_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/sentinel/status
+  method: get
+  operationId: get_sentinel_status_api_sentinel_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/strategist/status
+  method: get
+  operationId: get_strategist_status_api_strategist_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/strategist/briefing
+  method: get
+  operationId: get_strategist_briefing_api_strategist_briefing_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/strategist/briefing/generate
+  method: post
+  operationId: post_strategist_briefing_generate_api_strategist_briefing_generate_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/publicist/manifest
+  method: get
+  operationId: get_publicist_manifest_api_publicist_manifest_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/publicist/catalog
+  method: get
+  operationId: get_publicist_catalog_api_publicist_catalog_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/publicist/status
+  method: get
+  operationId: get_publicist_status_api_publicist_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/delivery
+  method: get
+  operationId: get_subscription_delivery_api_subscriptions_delivery_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscriptions/delivery/status
+  method: get
+  operationId: get_subscription_delivery_status_api_subscriptions_delivery_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/settlement/status
+  method: get
+  operationId: get_settlement_status_api_settlement_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/settlement/records
+  method: get
+  operationId: get_settlement_records_api_settlement_records_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/settlement/confirm
+  method: post
+  operationId: post_settlement_confirm_api_settlement_confirm_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/discovery/hit
+  method: post
+  operationId: post_discovery_hit_api_discovery_hit_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/discovery/funnel
+  method: get
+  operationId: get_discovery_funnel_api_discovery_funnel_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/discovery/registry-package
+  method: get
+  operationId: get_discovery_registry_package_api_discovery_registry_package_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/outbound/status
+  method: get
+  operationId: get_outbound_status_api_outbound_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/outbound/targets
+  method: get
+  operationId: get_outbound_targets_api_outbound_targets_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/outbound/targets
+  method: post
+  operationId: add_outbound_target_api_outbound_targets_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/outbound/run
+  method: post
+  operationId: run_outbound_now_api_outbound_run_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/trial-grant
+  method: post
+  operationId: post_trial_grant_api_ap2_trial_grant_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/ap2/trial-execute
+  method: post
+  operationId: post_trial_execute_api_ap2_trial_execute_post
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
+- path: /api/trial/status
+  method: get
+  operationId: get_trial_status_api_trial_status_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscription/referral-code
+  method: get
+  operationId: get_referral_code_api_subscription_referral_code_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none
+- path: /api/subscription/growth-stats
+  method: get
+  operationId: get_subscription_growth_stats_api_subscription_growth_stats_get
+  x-agentic-access:
+    action-class: connected
+    consequence: read
+    subject: optional
+    token:
+      max-ttl: 3600
+    audit: none

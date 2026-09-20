@@ -1,0 +1,18 @@
+generated: '2026-09-19'
+method: searched
+source: registry searches 2026-09-19
+package_count: 0
+packages: []
+searched:
+- {registry: npm, query: 'https://registry.npmjs.org/-/v1/search?text=merchant-0', result: '0 matching packages (results were unrelated @shopify/ucp-cli, @google-shopping/*, @commercetools-frontend/*)'}
+- {registry: pypi, query: 'https://pypi.org/pypi/merchant-0/json', status: 404}
+- {registry: pypi, query: 'https://pypi.org/pypi/merchant0/json', status: 404}
+- {registry: github, query: 'https://api.github.com/search/repositories?q=merchant-0.com', result: '0 relevant repositories (hits were unrelated agentic-commerce demos)'}
+- {registry: github-code, query: 'https://api.github.com/search/code?q="merchant-0.com"', result: 'no first-party repository'}
+- {registry: github-user, query: 'https://api.github.com/users/merchant-0 and /orgs/merchant0', result: 'no first-party account found'}
+- {registry: provider-site, query: 'https://merchant-0.com/ (homepage, /a2a, /agents, /boardroom links)', result: 'no SDK, CLI, GitHub or package link anywhere on the site; the site is a dashboard shell'}
+- {registry: agent-card, query: 'https://merchant-0.com/.well-known/agent-card.json', result: 'no documentationUrl, no SDK reference; the card directs agents to raw HTTP endpoints'}
+note: >-
+  Merchant-0 publishes no client library, CLI or SDK in any registry searched, and no first-party source
+  repository was found. The documented way in is raw HTTP against the OpenAPI at
+  https://api.merchant-0.com/openapi.json. No Packages or SDKs pointer is emitted.

@@ -1,23 +1,138 @@
 aid: merchant-0-com
 name: Merchant-0
-description: 'Merchant-0 is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Merchant-0 is a self-described "sovereign autonomous enterprise" that sells machine-to-machine trade-intelligence
+  products to other AI agents rather than to people: Grok-generated intelligence queries and market reports for
+  Southeast Asian and BRICS+ trade corridors, freight-rate and HS-tariff monitoring, regulatory-risk briefs, origin
+  attestations, agent DID verification and signed subscription-status proofs, priced per call or per monthly plan
+  in USD and settled through a Wise business account. It identifies itself as did:web:merchant-0.com and publishes
+  an A2A agent card at merchant-0.com/.well-known/agent-card.json (with a pre-0.3 agent.json beside it), a W3C DID
+  document, a UCP manifest and a 95-operation OpenAPI 3.1 contract at api.merchant-0.com/openapi.json covering its
+  three-step AP2 negotiate/sign/execute flow, a public service catalog, a REST-shaped "MCP" inventory manifest for
+  an industrial MRO product line, and an internal CEO / agent-council control surface. The human-facing site is
+  a Next.js "Command Center" dashboard; there is no developer documentation beyond the contract itself.'
 url: https://raw.githubusercontent.com/api-evangelist/merchant-0-com/refs/heads/main/apis.yml
+image: https://merchant-0.com/icons/icon-512.png
 x-type: company
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-09-19 (local-v3; was a2a-registry harvest stub)
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Agents
+- Agent Commerce
+- A2A
+- AP2
+- UCP
+- Trade Intelligence
+- Market Intelligence
+- Supply Chain
+- Southeast Asia
+- Decentralized Identity
+- agent-native
+apis:
+- aid: merchant-0-com:merchant-0-a2a-protocol-server-api
+  name: Merchant-0 A2A Protocol Server API
+  description: The REST contract behind Merchant-0's agent-commerce surface, served by a FastAPI application at
+    https://api.merchant-0.com and described by a 95-operation OpenAPI 3.1.0 document at /openapi.json. Public routes
+    cover service discovery (GET /api/catalog, /api/publicist/catalog), the AP2-labelled three-step purchase flow
+    (POST /api/ap2/negotiate -> /api/ap2/sign -> /api/ap2/execute, with the result read back from GET /api/intel/{execution_id}),
+    a free 24-hour trial grant, buyer-filed disputes, per-subscription quota (GET /api/subscriptions/{id}/usage),
+    a UCP capability manifest and an MRO product catalog search, plus a REST-shaped MCP manifest (GET /api/mcp/manifest,
+    /api/mcp/tools). The same document also publishes the operator's internal control plane (kill switch, credit
+    limits, price bands, settlement confirmation, agent-council status) gated by a body/query sandbox_token the
+    contract does not describe. The document declares no servers[], no securitySchemes, no tags and only 200/422
+    responses; the base URL below was confirmed from the host the spec is served on and the agent card's agent_api
+    field.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - AP2
+  - UCP
+  - Agent Commerce
+  - Trade Intelligence
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-openapi.json
+  - type: OpenAPI
+    name: OpenAPI 3.1.0 (provider-hosted, verbatim)
+    url: https://api.merchant-0.com/openapi.json
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+  - type: Overlay
+    url: overlays/merchant-0-com-openapi-overlay.yaml
+- aid: merchant-0-com:merchant-0-a2a-agent
+  name: Merchant-0 A2A Agent
+  description: 'Agent2Agent (A2A) surface: an agent card served from https://merchant-0.com/.well-known/agent-card.json
+    (with a pre-0.3 agent.json at the legacy path) naming did:web:merchant-0.com, four skills (SEA intelligence
+    query, SEA market report, agent DID verification, subscription-status proof) and https://api.merchant-0.com
+    as the agent URL. The card is graded flavored against A2A 1.0.0: it carries no protocolVersion (a protocolVersions
+    array instead), its capabilities object is a keyed map of priced SKUs rather than the A2A capabilities shape,
+    and the JSON-RPC responder lives at POST /message/send (the card''s own url answers 405) and returns one fixed
+    acknowledgement payload for every method. Real purchases run over the REST AP2 endpoints, which the card lists
+    under a non-standard endpoints block.'
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - A2A
+  - agent-native
+  - Decentralized Identity
+  properties:
+  - type: AgentCard
+    url: a2a/merchant-0-com-a2a.yml
+  - type: AgentCard
+    name: A2A Agent Card (provider-hosted)
+    url: https://merchant-0.com/.well-known/agent-card.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/merchant-0-com-domain-security.yml
+- type: AgenticAccess
+  url: agentic-access/merchant-0-com-agentic-access.yml
 - type: Website
   url: https://merchant-0.com/
+- type: APIReference
+  url: https://api.merchant-0.com/openapi.json
+- type: Pricing
+  name: Service catalog with prices (machine-readable)
+  url: https://api.merchant-0.com/api/catalog
+- type: AgentCard
+  url: a2a/merchant-0-com-a2a.yml
+- type: WellKnown
+  url: well-known/merchant-0-com-well-known.yml
+- type: MCPServer
+  url: mcp/merchant-0-com-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/merchant-0-com-tool-crosswalk.yml
+- type: LLMsTxt
+  url: llms/merchant-0-com-llms.txt
+- type: Conformance
+  url: conformance/merchant-0-com-conformance.yml
+- type: ErrorCatalog
+  url: errors/merchant-0-com-problem-types.yml
+- type: Lifecycle
+  url: lifecycle/merchant-0-com-lifecycle.yml
+- type: Authentication
+  url: authentication/merchant-0-com-authentication.yml
+- type: Conventions
+  url: conventions/merchant-0-com-conventions.yml
+- type: DataModel
+  url: data-model/merchant-0-com-data-model.yml
+- type: Plans
+  url: plans/merchant-0-com-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/merchant-0-com-rate-limits.yml
+- type: Sandbox
+  url: sandbox/merchant-0-com-sandbox.yml
+- type: AgentSkill
+  url: skills/_index.yml
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 31
+  pass: local-v3

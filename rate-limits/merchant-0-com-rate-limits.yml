@@ -1,0 +1,80 @@
+generated: '2026-09-19'
+method: searched
+source: https://merchant-0.com/.well-known/agent-card.json
+docs:
+- https://merchant-0.com/.well-known/ucp-manifest.json
+- https://api.merchant-0.com/openapi.json
+limit_count: 5
+summary: >-
+  Merchant-0 publishes no requests-per-second ceiling and returns no rate-limit headers (a 200 on GET
+  /api/catalog carried only Server, Content-Type, Content-Length and Connection). What it does publish: a
+  quota on the monthly plan whose exhaustion is signalled by a 429 on negotiate (agent card), an input-size
+  cap on intelligence queries, a one-per-DID 24-hour trial, a bounded limit parameter on catalog search, and
+  a per-capability rate_limit integer on each of the eight UCP capabilities whose unit (per minute? per
+  hour?) the manifest never states — and whose endpoints point at a host that does not resolve. No
+  Retry-After or RateLimit-* header is documented anywhere.
+rate_limits:
+- name: Subscription credit quota
+  scope: per-subscription (per buyer DID)
+  limit: 200
+  window: calendar month (auto-renews via AP2)
+  metric: intelligence credits (1 per intel query, 3 per market report)
+  exhaustion_status: 429
+  applies_to: [ap2_negotiate_alias_api_ap2_negotiate_post]
+  signal_in_body: 'GET /api/subscriptions/{subscription_id}/usage -> usage_count / usage_limit / queries_remaining / next_billing (fields named in the card''s proof capability)'
+  source: 'agent card trust_signals.subscription_enforcement: "Negotiate returns 429 when quota exhausted. Subscribers get $0.00 per covered unit within plan."'
+- name: Intelligence query input size
+  scope: per-request
+  limit: 8000
+  window: null
+  metric: tokens (input)
+  applies_to: ['ap2_execute_alias_api_ap2_execute_post with SKU merchant0-intel-001 (query field)']
+  source: 'agent card capabilities.merchant0-intel-001.description: "Max 8k tokens input."; GET /api/catalog description for the SKU repeats it'
+- name: Free trial grants
+  scope: per buyer DID
+  limit: 1
+  window: lifetime (the grant itself expires 24h after issue)
+  metric: trial grant
+  applies_to: [post_trial_grant_api_ap2_trial_grant_post]
+  source: 'openapi post_trial_grant description: "One trial per DID, expires 24h, not for FLAGGED DIDs."'
+- name: Catalog / inventory search page size
+  scope: per-request
+  limit: 100
+  window: null
+  metric: results (limit parameter, minimum 1, default 10)
+  applies_to: [mcp_inventory_search_api_mcp_inventory_search_post, search_catalog_api_ucp_catalog_search_post, search_catalog_api_ucp_catalog_search_get]
+  source: openapi MCPInventoryQuery.limit and CatalogSearchRequest.limit (maximum 100)
+- name: UCP per-capability rate_limit integers
+  scope: per-capability (unit and subject unstated)
+  limit: null
+  window: null
+  metric: unstated
+  values:
+  - {capability: dev.ucp.shopping.checkout, rate_limit: 50}
+  - {capability: dev.ucp.shopping.negotiate, rate_limit: 100}
+  - {capability: dev.ucp.catalog.search, rate_limit: 200}
+  - {capability: dev.ucp.catalog.details, rate_limit: 200}
+  - {capability: dev.ucp.inventory.check, rate_limit: 300}
+  - {capability: dev.ucp.inventory.reserve, rate_limit: 50}
+  - {capability: dev.ucp.payments.intent, rate_limit: 50}
+  - {capability: dev.ucp.payments.execute, rate_limit: 20}
+  source: /.well-known/ucp-manifest.json capabilities[].rate_limit
+  note: >-
+    Recorded verbatim; the manifest gives no unit, no window and no scope, and its endpoints name
+    https://merchant0.com/... which does not resolve, so these numbers cannot be tied to a callable route.
+    limit: null because a number without a window is not a limit an agent can plan against.
+other_gates:
+- name: Strategist high-value review
+  threshold: USD 100.00 per deal
+  behaviour: 'Deals >= USD 100 "receive Grok war-game analysis before sign/execute. Recommendation in AP2 negotiate response." Not a rate limit; a value gate that can delay or block execution. Status at GET /api/ap2/review/{contract_id}.'
+  source: agent card trust_signals.strategist_gate
+- name: Proof-of-work challenge for flagged buyers
+  behaviour: 'HTTP 402 with a SHA-256 difficulty-4 puzzle on negotiate; retry with X-PoW-Solution.'
+  source: openapi ap2_negotiate_alias description; GET /api/publicist/manifest security.pow_challenge
+headers:
+  declared: []
+  observed: []
+  note: No X-RateLimit-*, RateLimit-* or Retry-After header is declared in the contract or observed on any response.
+exhaustion:
+  status: 429
+  body: undocumented

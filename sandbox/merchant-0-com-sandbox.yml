@@ -1,0 +1,53 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.merchant-0.com/openapi.json
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+probed:
+- {url: 'https://api.merchant-0.com/api/catalog', status: 200, fetched: '2026-09-19', note: 'free, unauthenticated read used to confirm live SKUs'}
+- {url: 'https://api.merchant-0.com/health', status: 200, fetched: '2026-09-19'}
+summary: >-
+  Merchant-0 has no separate test environment, no test-mode keys and no test buyer DIDs; production is the
+  only host. Its rehearsal surface is two things the contract documents: a dry_run flag on the execute step
+  that runs the delivery but "skips invoice / subscription side effects", and a free 24-hour trial of the
+  headline intelligence SKU (one per DID, real Grok output, "$0.00 audit row"). Everything under /sandbox/*
+  and every sandbox_token field belongs to the OPERATOR — the contract states "/sandbox/state ... is a
+  production endpoint despite the name" — and is not a buyer sandbox. No test values of any kind are
+  published; none are invented here.
+test_vs_live:
+  separate_environment: false
+  key_prefixes: not applicable — no API keys exist
+  test_dids: not published
+  note: One host, one catalog, one settlement rail (Wise USD). The names "sandbox" and "sandbox_token" in the contract refer to the operator's control-plane token, not to a test mode.
+dry_run:
+  operation: ap2_execute_alias_api_ap2_execute_post
+  field: dry_run
+  type: boolean
+  default: false
+  behaviour: 'Quoted from AP2ExecuteBody: "dry_run (bool) -- skips invoice / subscription side effects; delivery handlers still run for testing."'
+  cost: not stated — the delivery handler still runs, so whether a dry run consumes a credit or is billed is undocumented
+  prerequisites: A SIGNED contract (negotiate -> sign first); the dry_run flag lives on execute only
+  note: There is no dry-run on negotiate or sign; a rehearsal therefore creates a real PENDING/SIGNED contract.
+free_trial:
+  sku: merchant0-intel-001
+  grant:
+    operation: post_trial_grant_api_ap2_trial_grant_post
+    body: TrialGrantBody {buyer_did, referral_code (optional)}
+    terms: '"Public (any buyer agent). One trial per DID, expires 24h, not for FLAGGED DIDs. Rule #11: only buyer_did_hash in response / logs."'
+  execute:
+    operation: post_trial_execute_api_ap2_trial_execute_post
+    body: TrialExecuteBody {trial_id, trial_nonce, query}
+    terms: '"Use a trial grant: real Grok intel, $0.00 audit row ... Public (authenticated by trial_nonce). Grok only -- never Perplexity. Does NOT increment buyer_reputation.total_executions"'
+  note: The trial is the closest thing to a sandbox for the product an agent would actually buy. The response shapes are undeclared (200 with an untyped object).
+fixtures:
+  free_reads:
+  - GET /api/catalog (16 SKUs with prices; optional ?category=intelligence|data|commerce|agent)
+  - GET /api/publicist/catalog (14 purchasable SKUs)
+  - GET /api/ucp/catalog/search and /api/ucp/inventory/check (MRO product rows and the A2A catalog)
+  - GET /api/mcp/manifest, /api/mcp/tools, /api/mcp/resources, /api/mcp/categories
+  - GET /api/ucp/identity, /api/ucp/capabilities, /.well-known/ucp-manifest.json
+  - GET /api/ap2/stats (all counters read 0 on 2026-09-19)
+  - POST /message/send (fixed JSON-RPC acknowledgement; "No database, no outbound HTTP")
+  test_values: none published
+time_simulation: none
+event_triggers: none (the provider publishes no outbound webhooks)

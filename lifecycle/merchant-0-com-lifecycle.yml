@@ -1,0 +1,65 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.merchant-0.com/openapi.json
+derived_from: openapi/merchant-0-com-openapi.json
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+- https://api.merchant-0.com/api/publicist/manifest
+versioning:
+  scheme: unversioned paths; a single calendar-style label "2026.1" carried in documents and banners
+  current_version: '2026.1 (OpenAPI info.version; API root banner protocols.ucp/mcp/ap2; UCP manifest ucp_version; legacy card protocol_version) / 1.0.0 (agent card version; UCP manifest_version; publicist manifest version) / "A2A CATALOG 2026.1" (GET /api/catalog version)'
+  spec_url: https://api.merchant-0.com/openapi.json
+  base_url: https://api.merchant-0.com
+  policy_published: false
+  note: >-
+    No version segment in any path and no version header. The contract's own descriptions reference internal
+    change tickets ("MP #40", "MP #53", "Task 2.1", "CATALOG_EXPANSION v1.0", "DIPLOMAT_v1.0", "Rule #7
+    ADDITIVE ONLY") and describe an additive-only convention — new behaviour "layered after" existing handlers
+    with fail-open fallbacks to "pre-MP-#53 behavior" — which is the closest thing to a published
+    compatibility policy: the provider states, inside the spec, that it does not change existing behaviour.
+    Nothing states how long a route is kept once replaced.
+  dated_markers:
+  - {surface: DID document, created: '2026-01-26', updated: '2026-04-21'}
+  - {surface: agent card (canonical), created: '2026-04-10', updated: '2026-05-20', last_modified_header: '2026-06-30'}
+  - {surface: agent card (legacy agent.json), created: '2026-04-10', updated: '2026-04-27'}
+  - {surface: publicist manifest, published_at: '2026-06-15'}
+  - {surface: MRO catalog rows (GET /api/ucp/catalog/search), last_updated: '2026-08-04'}
+  - {surface: website /agents page, note: '"Phase 48 Production", "47 Phases Complete", "4h Evolution Cycle" — a self-reported release cadence, not a changelog'}
+deprecation:
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  deprecated_operations: []
+  documented_retirements: []
+  superseded_but_still_served:
+  - what: Legacy discovery card /.well-known/agent.json
+    evidence: Updated 2026-04-27, lists SKUs (merchant0-compliance-001, merchant0-data-001, merchant0-agent-001) the live catalog no longer carries and a USD 0.99 intel price the catalog now states as 2.99; served alongside the canonical card with no deprecation marker.
+  - what: Three-step intent/cart flow (submit_intent -> sign_cart/{intent_id} -> execute_payment/{cart_id})
+    evidence: Coexists with the "alias" contract flow (ap2_negotiate_alias -> ap2_sign_alias -> ap2_execute_alias); the alias descriptions say they do "NOT cross-wire into AP2EnhancedHandler's intent/cart lifecycle". Neither is marked deprecated; the agent card and message/send both direct agents to the alias flow.
+  planned_but_not_live:
+  - what: merchant0-compliance-sub-monthly (SEA Compliance Unlimited) and merchant0-wolfpack-sub-monthly (Wolf Pack Dedicated Clone)
+    evidence: 'Agent card subscription_plans status "future" with note "Subscription infrastructure reserved for a future ... product. No per-execution SKU is currently delivered under this plan."; GET /api/catalog lists both with purchasable: false.'
+  note: 'Zero operations carry deprecated: true. No Deprecation pointer is emitted.'
+status_page:
+  url: null
+  health_endpoint:
+    url: https://api.merchant-0.com/health
+    status: 200
+    body: '{"status":"healthy","components":{"ucp":"operational","mcp":"operational","ap2":"operational","diplomat":"operational","sentinel":"operational"},"uptime":"99.9%"}'
+    note: >-
+      A liveness endpoint with a hard-coded-looking uptime figure, not a status page — no incident history,
+      no subscriptions, no per-component timestamps. It reports "mcp": "operational" while no MCP endpoint
+      exists. /status on the website 404s. No StatusPage pointer is emitted.
+  root_banner:
+    url: https://api.merchant-0.com/
+    body: '{"status":"operational","service":"Merchant-0 A2A Protocol Server","protocols":{"ucp":"2026.1","mcp":"2026.1","ap2":"2026.1"}}'
+sla:
+  published: false
+  note: 'The health endpoint prints uptime "99.9%"; no SLA, credits or support-response commitment is published anywhere. The agent card''s only time commitments are product-level: proofs valid 24 hours, trial grants expire 24 hours, subscriptions auto-renew monthly/annually via AP2.'
+changelog:
+  url: null
+  note: /changelog 404 on the website; no dated release notes anywhere. The OpenAPI descriptions embed internal ticket ids that function as an unpublished changelog.
+support:
+  url: null
+  note: The UCP manifest's support@merchant0.com and security@merchant0.com are on a domain that does not resolve; the agent card's contact block carries only the DID and a Wise pay link (https://wise.com/pay/business/merchant0, 200).

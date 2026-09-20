@@ -1,0 +1,115 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.merchant-0.com/openapi.json
+derived_from: openapi/merchant-0-com-openapi.json
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+base_url: https://api.merchant-0.com
+media_type: application/json
+auth:
+  style: >-
+    No securitySchemes are declared and no route requires a credential to be called. Identity is asserted in
+    the request BODY: the buyer sends its own DID (buyer_did, "did:web:...") on negotiate/intent/checkout/
+    dispute/trial-grant, and a buyer_signature string at sign time — the contract logs its length and "never
+    the signature material itself" but does not say what is signed or with which key. Two further gates are
+    described in prose only: an X-PoW-Solution header to answer a 402 proof-of-work challenge issued to
+    FLAGGED buyers, and a trial_nonce that authenticates a free-trial execution. Operator routes take an
+    undocumented sandbox_token as a query or body field ("Body-field token (NOT Bearer) per the established
+    convention"). The card's authentication block names "DID Web" and "AP2 buyer_signature".
+  detail: authentication/merchant-0-com-authentication.yml
+identity_privacy:
+  rule: 'Buyer DIDs are never returned. Across the contract "Rule #11: response surfaces only buyer_did_hash" — usage, intel results, invoices, reviews, disputes, trial status and referral codes all state the raw DID is excluded and a hash (buyer_did_hash / subscriber_did_hash / owner_did_hash) is returned instead.'
+  note: A consistent, documented convention; the hash algorithm is not stated.
+idempotency:
+  supported: partial
+  coverage: partial
+  mechanism: state-machine no-op on one transition
+  header: null
+  scope:
+  - ap2_sign_alias_api_ap2_sign_post
+  retention: not applicable
+  description: >-
+    The contract documents exactly one replay-safe write: "Precondition: contract exists and is in PENDING (or
+    already SIGNED, which is idempotent)" on POST /api/ap2/sign. Re-sending a sign request for an already
+    signed contract is a no-op. No Idempotency-Key header, parameter or body field exists on any of the 44
+    write operations, and execute — the operation that spends money — states only "Precondition: contract
+    exists and is in SIGNED", so whether a duplicate execute after a timeout double-delivers or is rejected is
+    undocumented. GET /api/subscription/referral-code also says "Idempotent: returns the existing code", but it
+    is a read.
+  gaps:
+  - No idempotency key on POST /api/ap2/execute (and the legacy POST /api/ap2/execute/{cart_id}), the only routes that create an invoice and trigger settlement.
+  - No idempotency key on POST /api/ap2/negotiate — each call creates a new PENDING contract.
+  - No documented safe-retry guidance for an ambiguous outcome.
+  pointer_note: No Idempotency pointer is emitted — a single state-machine no-op on the sign step is not an idempotency contract across the mutating surface.
+dry_run_mode:
+  supported: true
+  status: documented
+  mechanism: request flag
+  surfaces:
+  - operation: ap2_execute_alias_api_ap2_execute_post
+    field: dry_run (boolean, default false) in AP2ExecuteBody
+    description: 'Quoted from the schema: "dry_run (bool) -- skips invoice / subscription side effects; delivery handlers still run for testing." A dry run still executes the Grok delivery for the SKU; it is the billing side effects that are skipped.'
+    cost: not stated
+  - operation: post_trial_grant_api_ap2_trial_grant_post + post_trial_execute_api_ap2_trial_execute_post
+    description: 'A free rehearsal of the paid intel product: "Grant a free trial for merchant0-intel-001 ... One trial per DID, expires 24h, not for FLAGGED DIDs" then "Use a trial grant: real Grok intel, $0.00 audit row".'
+  note: The /sandbox/state route is NOT a sandbox — the contract says "This is a production endpoint despite the name."
+reversibility:
+  grade: none
+  docs: null
+  note: >-
+    No cancel, refund, void, reverse, undo or restore operation exists for a negotiated contract, an executed
+    purchase, an invoice or a subscription, and no window is stated anywhere. The only post-execution recourse
+    is a dispute: POST /api/ap2/dispute (ap2_dispute_file_api_ap2_dispute_post, "Buyer-initiated dispute
+    filing. No auth required", buyer must match the contract owner) which is resolved on the operator's side
+    by POST /api/advocate/disputes/{dispute_id}/resolve. What a resolution can do (refund? credit?) and how
+    long a buyer has to file are not documented, so nothing is asserted. Subscriptions "auto-renew via AP2"
+    with no documented cancel operation. Digital deliverables (Grok reports) cannot be un-delivered.
+  write_surfaces:
+  - operation: ap2_negotiate_alias_api_ap2_negotiate_post
+    action: Create a PENDING contract for one catalog SKU
+    reversal: none documented (a PENDING contract is simply never signed)
+    window: not stated
+  - operation: ap2_sign_alias_api_ap2_sign_post
+    action: PENDING -> SIGNED
+    reversal: none documented
+    window: not stated
+  - operation: ap2_execute_alias_api_ap2_execute_post
+    action: SIGNED -> EXECUTED; delivers the SKU, creates an invoice, routes settlement
+    reversal: dispute only (ap2_dispute_file_api_ap2_dispute_post); outcome and window not stated
+    window: not stated
+  - operation: trigger_renewal_manually_api_subscriptions_renew_post
+    action: Renew a subscription
+    reversal: none documented; no cancel operation exists
+    window: not stated
+pagination:
+  style: limit-only cap
+  params: [limit]
+  response_fields: none documented
+  note: Eight list routes (invoices, intel, executions, scout proposals, advocate disputes, settlement records, outbound targets) accept a bare limit; none accepts offset, cursor or page, and no response schema names a next token. MCPInventoryQuery.limit is bounded 1-100 (default 10).
+filtering:
+  params: [category (GET /api/catalog: intelligence | data | commerce | agent), sku, status, subscriber_did]
+field_expansion: none
+sparse_fields: none
+metadata: none
+request_tracing:
+  request_id_header: none
+  note: No request-id, trace or correlation header is declared or observed; a 200 on GET /api/catalog carried only Server, Content-Type, Content-Length and Connection.
+versioning:
+  style: none in the request; "2026.1" document label
+  detail: lifecycle/merchant-0-com-lifecycle.yml
+error_envelope:
+  shape: 'FastAPI {"detail": string | [{loc, msg, type}]}'
+  detail: errors/merchant-0-com-problem-types.yml
+rate_limit_signaling:
+  headers: none declared or observed
+  exhaustion_status: 429 (negotiate, per the agent card)
+  detail: rate-limits/merchant-0-com-rate-limits.yml
+payment_semantics:
+  flow: negotiate (terms, personalised by the Diplomat layer) -> sign (buyer_signature) -> execute (delivery + invoice + Wise settlement routing)
+  high_value_gate: 'Agent card trust_signals.strategist_gate: deals >= USD 100.00 "receive Grok war-game analysis before sign/execute. Recommendation in AP2 negotiate response." Review state readable at GET /api/ap2/review/{contract_id}.'
+  settlement: 'USD via Wise; "settlement_confirmed field in execute response" (card). Inbound Wise webhooks are consumed at POST /api/webhooks/wise (provider is the webhook CONSUMER, not a publisher).'
+  x_payment_header: Declared optional on GET /api/ucp/inventory/check only; behaviour undocumented.
+webhooks:
+  outbound: none — the provider publishes no webhook or event surface to buyers
+  inbound: POST /api/webhooks/wise (Wise -> Merchant-0, RSA-SHA256 verified, always-200)
+  subscription_delivery: 'Pull model — GET /api/subscriptions/delivery?subscriber_did=&sku= ("Pull endpoint for subscriber agents")'

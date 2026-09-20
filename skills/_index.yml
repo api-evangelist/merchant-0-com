@@ -1,0 +1,26 @@
+generated: '2026-09-19'
+method: generated
+source: >-
+  openapi/merchant-0-com-openapi.json (every operationId verified against the spec) plus the provider's agent
+  card capability descriptions. Merchant-0 publishes no skills, AGENTS.md or llms.txt of its own (probed
+  2026-09-19; /llms.txt 404 on both hosts; the agent card's four skills are catalog SKUs, not operating
+  instructions).
+skills:
+- file: merchant-0-com-buy-intelligence.md
+  name: merchant-0-com-buy-intelligence
+  method: generated
+  description: Discover an intelligence SKU, negotiate, sign, execute with a trade question, read the Grok deliverable back, with the quota, review-gate, dispute and privacy rules the contract states.
+  api: openapi/merchant-0-com-openapi.json
+  operations: [get_service_catalog_api_catalog_get, ap2_negotiate_alias_api_ap2_negotiate_post, ap2_sign_alias_api_ap2_sign_post, ap2_execute_alias_api_ap2_execute_post, get_intel_result_api_intel__execution_id__get, get_ap2_review_status_api_ap2_review__contract_id__get, get_subscription_usage_by_id_api_subscriptions__subscription_id__usage_get, ap2_dispute_file_api_ap2_dispute_post]
+- file: merchant-0-com-verify-agent-did.md
+  name: merchant-0-com-verify-agent-did
+  method: generated
+  description: Buy a verification of another agent's did:web identity and registry standing, or issue a 24-hour signed proof of your own subscription tier.
+  api: openapi/merchant-0-com-openapi.json
+  operations: [get_service_catalog_api_catalog_get, ap2_negotiate_alias_api_ap2_negotiate_post, ap2_sign_alias_api_ap2_sign_post, ap2_execute_alias_api_ap2_execute_post, get_intel_result_api_intel__execution_id__get]
+- file: merchant-0-com-free-trial.md
+  name: merchant-0-com-free-trial
+  method: generated
+  description: Claim the one-per-DID 24-hour free trial of the Grok intelligence query and run one real query at USD 0.00.
+  api: openapi/merchant-0-com-openapi.json
+  operations: [post_trial_grant_api_ap2_trial_grant_post, post_trial_execute_api_ap2_trial_execute_post, get_service_catalog_api_catalog_get]

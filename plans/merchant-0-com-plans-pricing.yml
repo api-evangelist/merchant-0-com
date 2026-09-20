@@ -1,0 +1,88 @@
+generated: '2026-09-19'
+method: probed
+source: https://api.merchant-0.com/api/catalog
+docs:
+- https://merchant-0.com/.well-known/agent-card.json
+- https://api.merchant-0.com/api/publicist/catalog
+catalog_file: plans/merchant-0-com-catalog.json
+plan_count: 16
+currency: USD
+model: >-
+  Pay-per-execution in USD through the provider's AP2-labelled negotiate/sign/execute flow, settled to a Wise
+  business account; one live monthly subscription (200 intelligence credits) and one annual pay-once
+  variant; two further monthly plans exist in the catalog but are not purchasable. Prices below are exactly
+  what GET /api/catalog (version "A2A CATALOG 2026.1", 16 items, machine-readable) returned on 2026-09-19,
+  plus the subscription_plans block of the agent card. No human pricing page exists (/pricing 404).
+summary: >-
+  Twelve purchasable per-execution products from USD 0.05 (subscription proof) to USD 65.00 (export
+  scenario forecast), one purchasable monthly plan (USD 49.00 for 200 credits; 1 credit per intel query,
+  3 per market report) and its annual pay-once form (USD 470.40 for 12 months, "20% new-agent discount on
+  first year"). The agent card (updated 2026-05-20) still prices the headline intel query at USD 0.99 where
+  the live catalog says 2.99, and the legacy card lists three SKUs (compliance-001 4.90, data-001 1.49,
+  agent-001 149.00) that no longer appear. Negotiate applies "personalized pricing" through the Diplomat
+  layer, so the catalog price is the list price, not necessarily the negotiated one. A free 24-hour trial of
+  merchant0-intel-001 (one per DID) is granted at POST /api/ap2/trial-grant.
+plans:
+- id: merchant0-intel-sub-monthly
+  name: Grok Intelligence Unlimited (Monthly)
+  price: 49.00
+  currency: USD
+  period: month
+  included: 200 intelligence credits per month (1 credit per intel query, 3 credits per market intelligence report; "Mix freely")
+  overage: not stated — the card says negotiate returns 429 when quota is exhausted; pay-per-query remains available
+  limits: ['200 credits/month', 'covers merchant0-intel-001 (card covers[]); catalog text also credits report-001 at 3 credits']
+  renewal: Auto-renews via AP2
+  purchasable: true
+  status: active
+- id: merchant0-intel-sub-annual
+  name: Grok Intelligence Annual (Pay-Once)
+  price: 470.40
+  currency: USD
+  period: year (billed once upfront)
+  included: 200 Grok intelligence credits per month for 12 months; "Includes monthly SEA trade intelligence delivery"
+  limits: ['20% new-agent discount on first year (stated in the description)']
+  renewal: Auto-renews annually via AP2
+  purchasable: true
+- id: merchant0-compliance-sub-monthly
+  name: SEA Compliance Unlimited (Monthly)
+  price: 99.00
+  currency: USD
+  period: month
+  included: 50 SEA Regulatory Safe-Passage transactions per month
+  purchasable: false
+  status: future
+  note: 'Card: "Subscription infrastructure reserved for a future SEA regulatory compliance product. No per-execution SKU is currently delivered under this plan."'
+- id: merchant0-wolfpack-sub-monthly
+  name: Wolf Pack Dedicated Clone (Monthly)
+  price: 399.00
+  currency: USD
+  period: month
+  included: 1 dedicated coalition slot for 30 days ("Shared sourcing, joint negotiation, revenue share")
+  purchasable: false
+  status: future
+  note: 'Card: "reserved for the future Wolf Pack coalition slot product. No per-execution SKU is currently delivered under this plan."'
+per_execution_products:
+- {sku: merchant0-proof-001, name: Subscription Status Proof, price: 0.05, unit: per_proof, category: attestation, note: 'Valid 24 hours; stateless'}
+- {sku: merchant0-verify-001, name: Agent DID Verification, price: 0.25, unit: per_check, category: verification}
+- {sku: merchant0-intel-001, name: Grok Frontier Intelligence Query, price: 2.99, unit: per_query, category: intelligence, note: 'Card states 0.99 per query and 0.00 when covered by the monthly plan; max 8k tokens input; free 24h trial available'}
+- {sku: merchant0-hs-monitor-001, name: HS Tariff Monitor, price: 3.99, unit: per_check, category: intelligence}
+- {sku: merchant0-carbon-tracking-001, name: Carbon Scope-3 Tracking, price: 4.50, unit: per_analysis, category: analysis}
+- {sku: merchant0-report-001, name: SEA Market Intelligence Report, price: 4.90, unit: per_report, category: intelligence}
+- {sku: merchant0-supply-trace-001, name: Supply Chain Traceability Risk, price: 7.25, unit: per_report, category: analysis}
+- {sku: merchant0-freight-intel-001, name: Freight Rate Intel, price: 7.50, unit: per_analysis, category: intelligence}
+- {sku: merchant0-origin-attest-001, name: Origin Attestation Service, price: 12.50, unit: per_check, category: attestation}
+- {sku: merchant0-reg-risk-001, name: Regulatory Risk Brief, price: 12.50, unit: per_report, category: analysis}
+- {sku: merchant0-bilateral-flow-001, name: Bilateral Trade Flow Deep-Dive, price: 45.00, unit: per_report, category: intelligence}
+- {sku: merchant0-export-scenario-001, name: Export Scenario Forecast, price: 65.00, unit: per_analysis, category: analysis}
+free_tier:
+  trial:
+    sku: merchant0-intel-001
+    operations: [post_trial_grant_api_ap2_trial_grant_post, post_trial_execute_api_ap2_trial_execute_post]
+    terms: One trial per DID; expires 24h; not for FLAGGED DIDs; "real Grok intel, $0.00 audit row"; optional referral_code
+  free_reads: GET /api/catalog, /api/publicist/catalog, /api/ucp/catalog/search, /api/ucp/inventory/check, /api/mcp/*, /health — no key, no payment
+enterprise_contact: none published
+discrepancies:
+- 'merchant0-intel-001: card 0.99 vs catalog 2.99 (2026-09-19).'
+- 'Legacy card catalog_summary lists merchant0-compliance-001 (4.90/session), merchant0-data-001 (1.49/query), merchant0-agent-001 (149.00 flat); none is in GET /api/catalog.'
+- 'GET /api/publicist/catalog reports item_count 14 against the 16 rows of GET /api/catalog (it omits the two non-purchasable plans).'
+- 'The MRO product catalog (GET /api/ucp/catalog/search: DIN 912 screws at USD 0.45 etc.) is a separate price list for physical goods with no purchasable path documented; not counted here.'
