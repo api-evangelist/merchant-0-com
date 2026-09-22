@@ -21,6 +21,18 @@ created: '2026-09-19'
 modified: '2026-09-19'
 tags:
 - Agents
+- Agentic Commerce
+- A2A
+- AP2
+- Universal Commerce Protocol
+- Trade Intelligence
+- Market Intelligence
+- Supply Chain
+- Southeast Asia
+- Decentralized Identity
+- agent-native
+tags_raw:
+- Agents
 - Agent Commerce
 - A2A
 - AP2
@@ -48,6 +60,11 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - AP2
+  - Universal Commerce Protocol
+  - Agentic Commerce
+  - Trade Intelligence
+  tags_raw:
   - AP2
   - UCP
   - Agent Commerce
