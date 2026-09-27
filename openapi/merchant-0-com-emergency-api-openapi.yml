@@ -1,0 +1,190 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Emergency API
+  version: '2026.1'
+  description: 'Operations tagged Emergency across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Emergency
+paths:
+  /emergency/status:
+    get:
+      summary: Get Emergency Status
+      description: 'GET /emergency/status -- current emergency system state.
+
+
+        Read-only. No authentication required. CEO consults this before
+
+        initiating any emergency action. Returns zero-state Decimal("0")
+
+        fund balances until FUND_BALANCE_WIRING v1.0 lands.'
+      operationId: get_emergency_status_emergency_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Emergency Status Emergency Status Get
+      tags:
+      - Emergency
+  /emergency/kill-switch/arm:
+    post:
+      summary: Arm Kill Switch
+      description: 'Arm the kill switch. Requires 2FA. Reversible.
+
+
+        Returns HTTP 200 always; success/failure is carried in the
+
+        response body''s ``status`` field (enum EmergencyActionStatus)
+
+        per the established /config/credit-limit convention.'
+      operationId: arm_kill_switch_emergency_kill_switch_arm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmergencyActionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Arm Kill Switch Emergency Kill Switch Arm Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Emergency
+  /emergency/kill-switch/activate:
+    post:
+      summary: Activate Kill Switch
+      description: 'Activate the kill switch. Requires 2FA + prior /arm success.
+
+
+        IRREVERSIBLE in production. Returns HTTP 200 always; status in
+
+        the body''s ``status`` field. Records intent and logs the action;
+
+        the actual agent-pipeline stop is wired in
+
+        EMERGENCY_WIRE_TO_DUAL_KILL_SWITCH v1.0.'
+      operationId: activate_kill_switch_emergency_kill_switch_activate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmergencyActionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Activate Kill Switch Emergency Kill Switch Activate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Emergency
+  /emergency/evacuate/initiate:
+    post:
+      summary: Initiate Evacuation
+      description: 'Initiate financial evacuation. Requires 2FA. Irreversible.
+
+
+        Records evacuation intent. Actual fund movement is executed by
+
+        PaymentRail in a follow-up MP. Returns HTTP 200 always; status
+
+        in the body''s ``status`` field. Never echoes EVACUATION_DESTINATION.'
+      operationId: initiate_evacuation_emergency_evacuate_initiate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EmergencyActionRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Initiate Evacuation Emergency Evacuate Initiate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Emergency
+components:
+  schemas:
+    EmergencyActionRequest:
+      properties:
+        ceo_token:
+          type: string
+          title: Ceo Token
+        ceo_pin:
+          type: string
+          title: Ceo Pin
+        confirmation:
+          type: string
+          title: Confirmation
+      type: object
+      required:
+      - ceo_token
+      - ceo_pin
+      - confirmation
+      title: EmergencyActionRequest
+      description: "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

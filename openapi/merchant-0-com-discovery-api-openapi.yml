@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Discovery API
+  version: '2026.1'
+  description: 'Operations tagged Discovery across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Discovery
+paths:
+  /api/discovery/hit:
+    post:
+      summary: Post Discovery Hit
+      description: 'Fire-and-forget discovery hit logger (Task 2.1). Never raises.
+
+
+        Called server-side by the Next.js .well-known dynamic routes, so it
+
+        has no auth. Must be fast: one INSERT, no further processing.
+
+        Rule #9: statement_cache_size=0. Rule #11: no buyer_did, no IP.'
+      operationId: post_discovery_hit_api_discovery_hit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscoveryHitBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Post Discovery Hit Api Discovery Hit Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Discovery
+  /api/discovery/funnel:
+    get:
+      summary: Get Discovery Funnel
+      description: 'CEO discovery funnel (Task 2.2). Rule #11: no buyer_did.'
+      operationId: get_discovery_funnel_api_discovery_funnel_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Discovery Funnel Api Discovery Funnel Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Discovery
+  /api/discovery/registry-package:
+    get:
+      summary: Get Discovery Registry Package
+      description: CEO registry submission package (Task 2.3).
+      operationId: get_discovery_registry_package_api_discovery_registry_package_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Discovery Registry Package Api Discovery Registry Package Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Discovery
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DiscoveryHitBody:
+      properties:
+        endpoint:
+          type: string
+          title: Endpoint
+          default: ''
+        user_agent:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Agent
+        referer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referer
+      type: object
+      title: DiscoveryHitBody
+      description: 'POST /api/discovery/hit body (codebase BaseModel convention).
+
+
+        Called fire-and-forget by the Next.js .well-known dynamic routes. No
+
+        auth, no buyer_did, no IP -- discovery precedes identity (Rule #11).'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

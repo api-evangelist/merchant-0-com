@@ -30,7 +30,7 @@ tags:
 - Supply Chain
 - Southeast Asia
 - Decentralized Identity
-- agent-native
+- Agent-Native
 tags_raw:
 - Agents
 - Agent Commerce
@@ -44,54 +44,24 @@ tags_raw:
 - Decentralized Identity
 - agent-native
 apis:
-- aid: merchant-0-com:merchant-0-a2a-protocol-server-api
-  name: Merchant-0 A2A Protocol Server API
-  description: The REST contract behind Merchant-0's agent-commerce surface, served by a FastAPI application at
-    https://api.merchant-0.com and described by a 95-operation OpenAPI 3.1.0 document at /openapi.json. Public routes
-    cover service discovery (GET /api/catalog, /api/publicist/catalog), the AP2-labelled three-step purchase flow
-    (POST /api/ap2/negotiate -> /api/ap2/sign -> /api/ap2/execute, with the result read back from GET /api/intel/{execution_id}),
-    a free 24-hour trial grant, buyer-filed disputes, per-subscription quota (GET /api/subscriptions/{id}/usage),
-    a UCP capability manifest and an MRO product catalog search, plus a REST-shaped MCP manifest (GET /api/mcp/manifest,
-    /api/mcp/tools). The same document also publishes the operator's internal control plane (kill switch, credit
-    limits, price bands, settlement confirmation, agent-council status) gated by a body/query sandbox_token the
-    contract does not describe. The document declares no servers[], no securitySchemes, no tags and only 200/422
-    responses; the base URL below was confirmed from the host the spec is served on and the agent card's agent_api
-    field.
-  humanURL: https://merchant-0.com/
-  baseURL: https://api.merchant-0.com
-  tags:
-  - AP2
-  - Universal Commerce Protocol
-  - Agentic Commerce
-  - Trade Intelligence
-  tags_raw:
-  - AP2
-  - UCP
-  - Agent Commerce
-  - Trade Intelligence
-  properties:
-  - type: OpenAPI
-    url: openapi/merchant-0-com-openapi.json
-  - type: OpenAPI
-    name: OpenAPI 3.1.0 (provider-hosted, verbatim)
-    url: https://api.merchant-0.com/openapi.json
-  - type: APIReference
-    url: https://api.merchant-0.com/openapi.json
-  - type: Overlay
-    url: overlays/merchant-0-com-openapi-overlay.yaml
 - aid: merchant-0-com:merchant-0-a2a-agent
   name: Merchant-0 A2A Agent
-  description: 'Agent2Agent (A2A) surface: an agent card served from https://merchant-0.com/.well-known/agent-card.json
+  description: >-
+    Agent2Agent (A2A) surface: an agent card served from https://merchant-0.com/.well-known/agent-card.json
     (with a pre-0.3 agent.json at the legacy path) naming did:web:merchant-0.com, four skills (SEA intelligence
     query, SEA market report, agent DID verification, subscription-status proof) and https://api.merchant-0.com
-    as the agent URL. The card is graded flavored against A2A 1.0.0: it carries no protocolVersion (a protocolVersions
-    array instead), its capabilities object is a keyed map of priced SKUs rather than the A2A capabilities shape,
-    and the JSON-RPC responder lives at POST /message/send (the card''s own url answers 405) and returns one fixed
-    acknowledgement payload for every method. Real purchases run over the REST AP2 endpoints, which the card lists
-    under a non-standard endpoints block.'
+    as the agent URL. The card is graded flavored against A2A 1.0.0: it carries no protocolVersion (a
+    protocolVersions array instead), its capabilities object is a keyed map of priced SKUs rather than
+    the A2A capabilities shape, and the JSON-RPC responder lives at POST /message/send (the card's own
+    url answers 405) and returns one fixed acknowledgement payload for every method. Real purchases run
+    over the REST AP2 endpoints, which the card lists under a non-standard endpoints block.
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - A2A
+  - Agent-Native
+  - Decentralized Identity
+  tags_raw:
   - A2A
   - agent-native
   - Decentralized Identity
@@ -101,12 +71,412 @@ apis:
   - type: AgentCard
     name: A2A Agent Card (provider-hosted)
     url: https://merchant-0.com/.well-known/agent-card.json
+- aid: merchant-0-com:merchant-0-com-advocate-api
+  name: Merchant-0 Advocate API
+  description: The Advocate API from Merchant-0 — 3 operation(s) for advocate.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Advocate
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-advocate-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-ap2-api
+  name: Merchant-0 Ap2 API
+  description: The Ap2 API from Merchant-0 — 16 operation(s) for ap2.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Ap2
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-ap2-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-bank-api
+  name: Merchant-0 Bank API
+  description: The Bank API from Merchant-0 — 1 operation(s) for bank.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Bank
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-bank-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-catalog-api
+  name: Merchant-0 Catalog API
+  description: The Catalog API from Merchant-0 — 1 operation(s) for catalog.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-catalog-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-config-api
+  name: Merchant-0 Config API
+  description: The Config API from Merchant-0 — 4 operation(s) for config.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Config
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-config-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-credit-api
+  name: Merchant-0 Credit API
+  description: The Credit API from Merchant-0 — 1 operation(s) for credit.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Credit
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-credit-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-credit-health-api
+  name: Merchant-0 Credit Health API
+  description: The Credit Health API from Merchant-0 — 1 operation(s) for credit health.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Credit Health
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-credit-health-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-dashboard-api
+  name: Merchant-0 Dashboard API
+  description: The Dashboard API from Merchant-0 — 1 operation(s) for dashboard.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Dashboard
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-dashboard-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-diplomat-api
+  name: Merchant-0 Diplomat API
+  description: The Diplomat API from Merchant-0 — 2 operation(s) for diplomat.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Diplomat
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-diplomat-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-discovery-api
+  name: Merchant-0 Discovery API
+  description: The Discovery API from Merchant-0 — 3 operation(s) for discovery.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-discovery-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-emergency-api
+  name: Merchant-0 Emergency API
+  description: The Emergency API from Merchant-0 — 4 operation(s) for emergency.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Emergency
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-emergency-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-harvest-api
+  name: Merchant-0 Harvest API
+  description: The Harvest API from Merchant-0 — 1 operation(s) for harvest.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Harvest
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-harvest-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-health-api
+  name: Merchant-0 Health API
+  description: The Health API from Merchant-0 — 1 operation(s) for health.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Health
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-health-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-intel-api
+  name: Merchant-0 Intel API
+  description: The Intel API from Merchant-0 — 2 operation(s) for intel.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Intel
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-intel-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-invoices-api
+  name: Merchant-0 Invoices API
+  description: The Invoices API from Merchant-0 — 1 operation(s) for invoices.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Invoices
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-invoices-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-mcp-api
+  name: Merchant-0 MCP API
+  description: The Mcp API from Merchant-0 — 6 operation(s) for mcp.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Mcp
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-mcp-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-merchant-0-a2a-protocol-server-api
+  name: Merchant-0 Merchant 0 A2A Protocol Server API
+  description: >-
+    The Merchant 0 A2A Protocol Server API from Merchant-0 — 1 operation(s) for merchant 0 a2a protocol
+    server.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Merchant 0 A2A Protocol Server
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-merchant-0-a2a-protocol-server-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-message-api
+  name: Merchant-0 Message API
+  description: The Message API from Merchant-0 — 1 operation(s) for message.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Message
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-message-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-outbound-api
+  name: Merchant-0 Outbound API
+  description: The Outbound API from Merchant-0 — 3 operation(s) for outbound.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Outbound
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-outbound-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-publicist-api
+  name: Merchant-0 Publicist API
+  description: The Publicist API from Merchant-0 — 3 operation(s) for publicist.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Publicist
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-publicist-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-sandbox-api
+  name: Merchant-0 Sandbox API
+  description: The Sandbox API from Merchant-0 — 1 operation(s) for sandbox.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Sandbox
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-sandbox-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-scout-api
+  name: Merchant-0 Scout API
+  description: The Scout API from Merchant-0 — 5 operation(s) for scout.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Scout
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-scout-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-sentinel-api
+  name: Merchant-0 Sentinel API
+  description: The Sentinel API from Merchant-0 — 3 operation(s) for sentinel.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Sentinel
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-sentinel-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-settlement-api
+  name: Merchant-0 Settlement API
+  description: The Settlement API from Merchant-0 — 3 operation(s) for settlement.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Settlement
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-settlement-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-strategist-api
+  name: Merchant-0 Strategist API
+  description: The Strategist API from Merchant-0 — 3 operation(s) for strategist.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Strategist
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-strategist-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-subscription-api
+  name: Merchant-0 Subscription API
+  description: The Subscription API from Merchant-0 — 2 operation(s) for subscription.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Subscription
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-subscription-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-subscriptions-api
+  name: Merchant-0 Subscriptions API
+  description: The Subscriptions API from Merchant-0 — 5 operation(s) for subscriptions.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Subscriptions
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-subscriptions-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-technologist-api
+  name: Merchant-0 Technologist API
+  description: The Technologist API from Merchant-0 — 1 operation(s) for technologist.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Technologist
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-technologist-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-treasurer-api
+  name: Merchant-0 Treasurer API
+  description: The Treasurer API from Merchant-0 — 1 operation(s) for treasurer.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Treasurer
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-treasurer-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-trial-api
+  name: Merchant-0 Trial API
+  description: The Trial API from Merchant-0 — 1 operation(s) for trial.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Trial
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-trial-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-ucp-api
+  name: Merchant-0 Ucp API
+  description: The Ucp API from Merchant-0 — 9 operation(s) for ucp.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Ucp
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-ucp-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-webhooks-api
+  name: Merchant-0 Webhooks API
+  description: The Webhooks API from Merchant-0 — 1 operation(s) for webhooks.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-webhooks-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
+- aid: merchant-0-com:merchant-0-com-well-known-api
+  name: Merchant-0 .well Known API
+  description: The .well Known API from Merchant-0 — 1 operation(s) for .well known.
+  humanURL: https://merchant-0.com/
+  baseURL: https://api.merchant-0.com
+  tags:
+  - .well Known
+  properties:
+  - type: OpenAPI
+    url: openapi/merchant-0-com-well-known-api-openapi.yml
+  - type: APIReference
+    url: https://api.merchant-0.com/openapi.json
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Overlay
+  url: overlays/merchant-0-com-openapi-overlay.yaml
 - type: DomainSecurity
   url: security/merchant-0-com-domain-security.yml
 - type: AgenticAccess

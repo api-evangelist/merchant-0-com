@@ -1,0 +1,111 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Subscription API
+  version: '2026.1'
+  description: 'Operations tagged Subscription across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Subscription
+paths:
+  /api/subscription/referral-code:
+    get:
+      summary: Get Referral Code
+      description: 'Issue / retrieve a subscriber''s referral code (Task 3.4).
+
+
+        Public to the subscriber (auth = proven active subscription for the
+
+        supplied DID, NOT a CEO token). Rule #11: only owner_did_hash returned.
+
+        Idempotent: returns the existing code if one exists.'
+      operationId: get_referral_code_api_subscription_referral_code_get
+      parameters:
+      - name: subscriber_did
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Subscriber Did
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Referral Code Api Subscription Referral Code Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Subscription
+  /api/subscription/growth-stats:
+    get:
+      summary: Get Subscription Growth Stats
+      description: 'CEO subscription growth + referral metrics (Task 3.6). Rule #11.'
+      operationId: get_subscription_growth_stats_api_subscription_growth_stats_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Subscription Growth Stats Api Subscription Growth Stats Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Subscription
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

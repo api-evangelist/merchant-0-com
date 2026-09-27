@@ -1,0 +1,171 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Subscriptions API
+  version: '2026.1'
+  description: 'Operations tagged Subscriptions across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Subscriptions
+paths:
+  /api/subscriptions:
+    get:
+      summary: Get Subscriptions Cxo
+      description: 'CEO-safe subscription list: buyer_did excluded from response.'
+      operationId: get_subscriptions_cxo_api_subscriptions_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Subscriptions Cxo Api Subscriptions Get
+      tags:
+      - Subscriptions
+  /api/subscriptions/{subscription_id}/usage:
+    get:
+      summary: Get Subscription Usage By Id
+      description: Per-subscription quota (buyer DID never emitted).
+      operationId: get_subscription_usage_by_id_api_subscriptions__subscription_id__usage_get
+      parameters:
+      - name: subscription_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Subscription Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Subscription Usage By Id Api Subscriptions  Subscription Id  Usage Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Subscriptions
+  /api/subscriptions/renew:
+    post:
+      summary: Trigger Renewal Manually
+      description: Manually trigger subscription renewal job (admin / testing).
+      operationId: trigger_renewal_manually_api_subscriptions_renew_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Trigger Renewal Manually Api Subscriptions Renew Post
+      tags:
+      - Subscriptions
+  /api/subscriptions/delivery:
+    get:
+      summary: Get Subscription Delivery
+      description: 'Pull endpoint for subscriber agents (Task 3.1). No CEO token.
+
+
+        Rule #11: response carries subscriber_did_hash, never the raw DID.'
+      operationId: get_subscription_delivery_api_subscriptions_delivery_get
+      parameters:
+      - name: subscriber_did
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Subscriber Did
+      - name: sku
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sku
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Subscription Delivery Api Subscriptions Delivery Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Subscriptions
+  /api/subscriptions/delivery/status:
+    get:
+      summary: Get Subscription Delivery Status
+      description: 'CEO-only delivery-pipeline visibility (Task 3.2). Rule #11.'
+      operationId: get_subscription_delivery_status_api_subscriptions_delivery_status_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Subscription Delivery Status Api Subscriptions Delivery Status Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Subscriptions
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

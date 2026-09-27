@@ -1,0 +1,27 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Health API
+  version: '2026.1'
+  description: 'Operations tagged Health across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Health
+paths:
+  /health:
+    get:
+      summary: Health
+      description: Detailed health check.
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Health
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

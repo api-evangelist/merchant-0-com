@@ -1,0 +1,200 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com MCP API
+  version: '2026.1'
+  description: 'Operations tagged Mcp across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: MCP
+paths:
+  /api/mcp/manifest:
+    get:
+      summary: Get Mcp Manifest
+      description: 'MCP Server manifest for LLM integration.
+
+
+        Describes available tools and resources for LLMs.'
+      operationId: get_mcp_manifest_api_mcp_manifest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /api/mcp/tools:
+    get:
+      summary: List Mcp Tools
+      description: List available MCP tools.
+      operationId: list_mcp_tools_api_mcp_tools_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /api/mcp/resources:
+    get:
+      summary: List Mcp Resources
+      description: List available MCP resources.
+      operationId: list_mcp_resources_api_mcp_resources_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /api/mcp/inventory/search:
+    post:
+      summary: Mcp Inventory Search
+      description: 'MCP Tool: search_inventory
+
+
+        Natural language product search optimized for LLM understanding.'
+      operationId: mcp_inventory_search_api_mcp_inventory_search_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MCPInventoryQuery'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - MCP
+  /api/mcp/categories:
+    get:
+      summary: Get Categories
+      description: Get available product categories.
+      operationId: get_categories_api_mcp_categories_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+  /api/mcp/capabilities:
+    get:
+      summary: Get Mcp Capabilities Alias
+      description: 'Alias of /api/mcp/manifest.
+
+
+        Returns the same MCPInventoryServer manifest under the MP-specified
+
+        path so agent SDKs written against /api/mcp/capabilities succeed.'
+      operationId: get_mcp_capabilities_alias_api_mcp_capabilities_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - MCP
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MCPInventoryQuery:
+      properties:
+        search_term:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Search Term
+          description: Natural language search term
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+          description: Product category filter
+        min_price:
+          anyOf:
+          - type: number
+          - type: string
+          - type: 'null'
+          title: Min Price
+          description: Minimum price filter
+        max_price:
+          anyOf:
+          - type: number
+          - type: string
+          - type: 'null'
+          title: Max Price
+          description: Maximum price filter
+        in_stock_only:
+          type: boolean
+          title: In Stock Only
+          description: Only return in-stock items
+          default: true
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          description: Maximum results to return
+          default: 10
+        include_attributes:
+          type: boolean
+          title: Include Attributes
+          description: Include detailed attributes
+          default: true
+      type: object
+      title: MCPInventoryQuery
+      description: 'Query from LLM about inventory.
+
+
+        Supports natural language search, category filtering,
+
+        price ranges, and stock availability checks.'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

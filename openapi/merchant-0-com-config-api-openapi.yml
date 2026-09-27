@@ -1,0 +1,329 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Config API
+  version: '2026.1'
+  description: 'Operations tagged Config across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Config
+paths:
+  /config/credit-limit:
+    post:
+      summary: Update Credit Limit
+      description: 'Update CEO operational VISA credit limit.
+
+
+        Phase 36 Credit System. Valid range: MINIMUM_OPERATIONAL_LIMIT
+
+        (PHP 10,000) to CEO_OPERATIONAL_LIMIT_DEFAULT (PHP 240,000) --
+
+        both imported from velocity_engine, never hardcoded here.
+
+        Requires the ``sandbox_token`` body field to match the
+
+        CEO_PRODUCTION_TOKEN environment variable.
+
+
+        Status codes returned in the response body (HTTP 200 always):
+
+        UPDATED -- limit accepted and acknowledged.
+
+        REJECTED_AUTH -- sandbox_token mismatch.
+
+        REJECTED_RANGE -- new_limit_php out of [10,000 .. 240,000].
+
+        ERROR -- malformed numeric value in new_limit_php.
+
+
+        Persistence note: until VaultManager KEY 15 is wired, UPDATED is
+
+        in-memory only and does not affect subsequent /credit-health
+
+        responses. See section header above.'
+      operationId: update_credit_limit_config_credit_limit_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditLimitUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Update Credit Limit Config Credit Limit Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Config
+  /config/harvest-threshold:
+    get:
+      summary: Get Harvest Threshold Config
+      description: 'Return the currently configured harvest threshold (no auth).
+
+
+        Mirrors GET /credit-health''s public-read posture. Calls
+
+        read_harvest_threshold_from_db() which transparently falls back
+
+        to the HARVEST_THRESHOLD_USD env var when the DB is unreachable.
+
+        The source field on the response makes the provenance explicit
+
+        so the dashboard can optionally distinguish a CEO-set value
+
+        from a fallback default.'
+      operationId: get_harvest_threshold_config_config_harvest_threshold_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Harvest Threshold Config Config Harvest Threshold Get
+      tags:
+      - Config
+    post:
+      summary: Update Harvest Threshold
+      description: 'Update the CEO-configured USD harvest threshold.
+
+
+        HARVEST_THRESHOLD_CONFIG v1.0 (MP #46). Valid range:
+
+        HARVEST_THRESHOLD_MIN_USD (0.00) to HARVEST_THRESHOLD_MAX_USD
+
+        (10000.00) -- the upper bound is a sanity cap, not a business
+
+        constraint. Requires the sandbox_token body field to match the
+
+        CEO_PRODUCTION_TOKEN environment variable (same auth pattern as
+
+        POST /config/credit-limit).
+
+
+        Status codes returned in the response body (HTTP 200 always):
+
+        UPDATED -- threshold accepted and persisted.
+
+        REJECTED_AUTH -- sandbox_token mismatch.
+
+        REJECTED_RANGE -- new_threshold_usd out of [0.00 .. 10000.00].
+
+        ERROR -- malformed numeric value in new_threshold_usd.'
+      operationId: update_harvest_threshold_config_harvest_threshold_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HarvestThresholdUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Update Harvest Threshold Config Harvest Threshold Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Config
+  /config/price-bands:
+    get:
+      summary: Get Price Bands Config
+      description: 'TREASURER_v1.0 (MP #52, Task 1.2). CEO-auth via query token.'
+      operationId: get_price_bands_config_config_price_bands_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Price Bands Config Config Price Bands Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Config
+  /config/price-bands/{sku}:
+    post:
+      summary: Update Price Band Config
+      description: 'TREASURER_v1.0 (MP #52, Task 1.3). CEO-auth; merge partial body.'
+      operationId: update_price_band_config_config_price_bands__sku__post
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sku
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PriceBandUpdateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Update Price Band Config Config Price Bands  Sku  Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Config
+components:
+  schemas:
+    CreditLimitUpdateRequest:
+      properties:
+        new_limit_php:
+          type: string
+          title: New Limit Php
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+      type: object
+      required:
+      - new_limit_php
+      - sandbox_token
+      title: CreditLimitUpdateRequest
+      description: 'POST /config/credit-limit request body.
+
+
+        Field names mirror the boardroom and ceo/settings frontends: the
+
+        new limit is carried as ``new_limit_php`` (typed str on the wire
+
+        because both frontends send ``JSON.stringify({ new_limit_php:
+
+        newLimit, ... })`` where ``newLimit`` is a raw text-input string).
+
+        The handler coerces the value to Decimal via ``Decimal(str(...))``
+
+        -- it is NEVER typed float per rule #1. ``sandbox_token`` carries
+
+        the body-field form of the CEO sandbox token used by the sandbox
+
+        reference contract (see mock_fintech_app.py line 309).'
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PriceBandUpdateRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        floor_usd:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Floor Usd
+        ceiling_usd:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ceiling Usd
+        target_usd:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Usd
+        locked:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Locked
+      type: object
+      required:
+      - sandbox_token
+      title: PriceBandUpdateRequest
+      description: POST /config/price-bands/{sku} body.
+    HarvestThresholdUpdateRequest:
+      properties:
+        new_threshold_usd:
+          type: string
+          title: New Threshold Usd
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+      type: object
+      required:
+      - new_threshold_usd
+      - sandbox_token
+      title: HarvestThresholdUpdateRequest
+      description: 'POST /config/harvest-threshold request body.
+
+
+        Body-field token (NOT Bearer) per the established convention --
+
+        mirrors POST /config/credit-limit. new_threshold_usd is typed str
+
+        on the wire so the dashboard can send raw text-input values
+
+        untouched; the handler coerces to Decimal via Decimal(str(...))
+
+        and never accepts float typing (Rule 1).'
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

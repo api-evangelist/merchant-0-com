@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Settlement API
+  version: '2026.1'
+  description: 'Operations tagged Settlement across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Settlement
+paths:
+  /api/settlement/status:
+    get:
+      summary: Get Settlement Status
+      description: Public settlement analytics (Task 3.1). Triggers expiry sweep.
+      operationId: get_settlement_status_api_settlement_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Settlement Status Api Settlement Status Get
+      tags:
+      - Settlement
+  /api/settlement/records:
+    get:
+      summary: Get Settlement Records
+      description: 'CEO settlement records + summary (Task 3.2). Rule #11: hash only.'
+      operationId: get_settlement_records_api_settlement_records_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Settlement Records Api Settlement Records Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Settlement
+  /api/settlement/confirm:
+    post:
+      summary: Post Settlement Confirm
+      description: 'CEO manual settlement confirmation (Task 3.3). Rule #13: CEO decision.'
+      operationId: post_settlement_confirm_api_settlement_confirm_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SettlementConfirmBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Post Settlement Confirm Api Settlement Confirm Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Settlement
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    SettlementConfirmBody:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+          default: ''
+        execution_id:
+          type: string
+          title: Execution Id
+          default: ''
+        wise_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wise Reference
+        confirmation_note:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmation Note
+      type: object
+      title: SettlementConfirmBody
+      description: POST /api/settlement/confirm request body (codebase BaseModel convention).
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

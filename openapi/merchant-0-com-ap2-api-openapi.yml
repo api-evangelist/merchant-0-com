@@ -1,0 +1,783 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Ap2 API
+  version: '2026.1'
+  description: 'Operations tagged Ap2 across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Ap2
+paths:
+  /api/ap2/intent:
+    post:
+      summary: Submit Intent
+      description: 'Submit AP2 intent mandate.
+
+
+        Step 1 of AP2 flow: Buyer submits purchase intent.'
+      operationId: submit_intent_api_ap2_intent_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AP2IntentRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/sign/{intent_id}:
+    post:
+      summary: Sign Cart
+      description: 'Sign cart mandate.
+
+
+        Step 2 of AP2 flow: Generate signed cart mandate.'
+      operationId: sign_cart_api_ap2_sign__intent_id__post
+      parameters:
+      - name: intent_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Intent Id
+      - name: discount_percent
+        in: query
+        required: false
+        schema:
+          type: number
+          default: 0.0
+          title: Discount Percent
+      - name: discount_reason
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Discount Reason
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/execute/{cart_id}:
+    post:
+      summary: Execute Payment
+      description: 'Execute payment.
+
+
+        Step 3 of AP2 flow: Execute payment with proof.'
+      operationId: execute_payment_api_ap2_execute__cart_id__post
+      parameters:
+      - name: cart_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Cart Id
+      - name: payment_proof
+        in: query
+        required: true
+        schema:
+          type: string
+          title: Payment Proof
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/cart/{cart_id}:
+    get:
+      summary: Get Cart
+      description: Get signed cart details.
+      operationId: get_cart_api_ap2_cart__cart_id__get
+      parameters:
+      - name: cart_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Cart Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/stats:
+    get:
+      summary: Get Ap2 Stats
+      description: Get AP2 transaction statistics.
+      operationId: get_ap2_stats_api_ap2_stats_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Ap2
+  /api/ap2/executions:
+    get:
+      summary: Get Ap2 Executions
+      description: CEO-facing completed AP2 alias executions (buyer_did excluded).
+      operationId: get_ap2_executions_api_ap2_executions_get
+      parameters:
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      - name: sku
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Ap2 Executions Api Ap2 Executions Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/review/{contract_id}:
+    get:
+      summary: Get Ap2 Review Status
+      description: Strategist review status for a contract (buyer_did never returned).
+      operationId: get_ap2_review_status_api_ap2_review__contract_id__get
+      parameters:
+      - name: contract_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Contract Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Ap2 Review Status Api Ap2 Review  Contract Id  Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/reviews:
+    get:
+      summary: Get Ap2 Reviews Ceo
+      description: Pending / escalated reviews for CEO (no buyer_did in rows).
+      operationId: get_ap2_reviews_ceo_api_ap2_reviews_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Get Ap2 Reviews Ceo Api Ap2 Reviews Get
+      tags:
+      - Ap2
+  /api/ap2/review/{path_id}/approve:
+    post:
+      summary: Ap2 Review Approve
+      description: 'CEO/Strategist: approve a Strategist-escalated review.
+
+
+        Source of truth is ``ap2_reviews``. The ``{path_id}`` URL segment
+
+        accepts either a ``review_id`` (e.g. ``rev_...``) or a ``contract_id``
+
+        (e.g. ``ap2_...``); the dashboard sends ``contract_id``, CEO test
+
+        curls typically send ``review_id``, and both paths resolve to the
+
+        same DB row.'
+      operationId: ap2_review_approve_api_ap2_review__path_id__approve_post
+      parameters:
+      - name: path_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Path Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ap2StrategistReviewActionBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Ap2 Review Approve Api Ap2 Review  Path Id  Approve Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/review/{path_id}/reject:
+    post:
+      summary: Ap2 Review Reject
+      description: 'CEO/Strategist: reject a Strategist-escalated review.
+
+
+        See ``ap2_review_approve`` for the source-of-truth rationale.'
+      operationId: ap2_review_reject_api_ap2_review__path_id__reject_post
+      parameters:
+      - name: path_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Path Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ap2StrategistReviewActionBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Ap2 Review Reject Api Ap2 Review  Path Id  Reject Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/negotiate:
+    post:
+      summary: Ap2 Negotiate Alias
+      description: 'Create a PENDING alias contract.
+
+
+        Does NOT cross-wire into AP2EnhancedHandler''s intent/cart lifecycle;
+
+        A2A CATALOG v1.0: terms use ``unit_price_usd`` and ``total_price_usd``
+
+        from the catalog. Unknown ``item_id`` (SKU) returns HTTP 404.
+
+
+        DIPLOMAT_v1.0 (MP #53): personalized pricing is layered after
+
+        ``_terms_for_catalog_item`` via _compute_diplomat_terms(). FLAGGED
+
+        buyers receive an HTTP 402 PoW challenge instead of terms; submit
+
+        the solution via the ``X-PoW-Solution`` request header on a retry.
+
+        The Diplomat layer is wrapped in try/except -- any failure leaves
+
+        the negotiate handler in its pre-MP-#53 catalog-price behavior
+
+        (Rule #7 ADDITIVE ONLY).
+
+
+        SENTINEL_v1.0 (MP #55, Task 2.3): the Sentinel screens every
+
+        incoming request through the SemanticFirewall BEFORE catalog,
+
+        Diplomat, and credit checks. Confirmed injection patterns return
+
+        HTTP 403 sentinel_blocked; everything else (including
+
+        Sentinel-internal errors per Rule #7) falls through to the
+
+        pre-MP-#55 handler logic unchanged.'
+      operationId: ap2_negotiate_alias_api_ap2_negotiate_post
+      parameters:
+      - name: X-PoW-Solution
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Pow-Solution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AP2NegotiateBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                title: Response Ap2 Negotiate Alias Api Ap2 Negotiate Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/sign:
+    post:
+      summary: Ap2 Sign Alias
+      description: 'Transition an alias contract to SIGNED.
+
+
+        Precondition: contract exists and is in PENDING (or already SIGNED,
+
+        which is idempotent). The buyer_signature length is logged -- never
+
+        the signature material itself.
+
+
+        SENTINEL_v1.0 (MP #55, Task 2.4): the Sentinel screens the signing
+
+        request through the SemanticFirewall AFTER the contract / state
+
+        preconditions and BEFORE the Advocate validation. Confirmed
+
+        injection patterns return HTTP 403 sentinel_blocked; everything
+
+        else falls through to the Advocate (Rule #7 fail-open).'
+      operationId: ap2_sign_alias_api_ap2_sign_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AP2SignBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Ap2 Sign Alias Api Ap2 Sign Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/execute:
+    post:
+      summary: Ap2 Execute Alias
+      description: 'Transition an alias contract to EXECUTED.
+
+
+        Precondition: contract exists and is in SIGNED. Logs a settlement
+
+        routing intent toward USD_SETTLEMENT_ACCOUNT (Vault key 17) via the
+
+        non-secret label -- never touches an account number. Actual payment
+
+        wiring lands in AP2 PAYMENT WIRING v1.0.'
+      operationId: ap2_execute_alias_api_ap2_execute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AP2ExecuteBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Ap2 Execute Alias Api Ap2 Execute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/dispute:
+    post:
+      summary: Ap2 Dispute File
+      description: 'Buyer-initiated dispute filing.
+
+
+        No auth required (A2A-direct -- Deviation 8). Rule #11: response
+
+        surfaces only buyer_did_hash. Buyer match enforced against the
+
+        contract owner so rival agents cannot file disputes on other
+
+        agents'' contracts.'
+      operationId: ap2_dispute_file_api_ap2_dispute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeFileRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Ap2 Dispute File Api Ap2 Dispute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/trial-grant:
+    post:
+      summary: Post Trial Grant
+      description: 'Grant a free trial for merchant0-intel-001 (Task 2.1).
+
+
+        Public (any buyer agent). One trial per DID, expires 24h, not for
+
+        FLAGGED DIDs. Rule #11: only buyer_did_hash in response / logs.'
+      operationId: post_trial_grant_api_ap2_trial_grant_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrialGrantBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Post Trial Grant Api Ap2 Trial Grant Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+  /api/ap2/trial-execute:
+    post:
+      summary: Post Trial Execute
+      description: 'Use a trial grant: real Grok intel, $0.00 audit row (Task 3.1).
+
+
+        Public (authenticated by trial_nonce). Grok only -- never Perplexity.
+
+        Does NOT increment buyer_reputation.total_executions (acquisition
+
+        discount preserved). Rule #11: only buyer_did_hash in response.'
+      operationId: post_trial_execute_api_ap2_trial_execute_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrialExecuteBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Post Trial Execute Api Ap2 Trial Execute Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ap2
+components:
+  schemas:
+    AP2ExecuteBody:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+        query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+        dry_run:
+          type: boolean
+          title: Dry Run
+          default: false
+        target_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Did
+        subscription_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Id
+        report_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Type
+      type: object
+      required:
+      - contract_id
+      title: AP2ExecuteBody
+      description: "POST /api/ap2/execute request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\"}\n\nOptional fields by deliverable SKU (CATALOG_EXPANSION v1.0 / MP #40):\n\n* ``query`` (str)        -- INTEL_SKUS (merchant0-intel-001),\n                            REPORT_SKUS (merchant0-report-001).\n                            Free-form trade question; required for\n                            report-001 to dispatch Grok.\n* ``report_type`` (str)  -- REPORT_SKUS hint: \"trade_route\" |\n                            \"regulatory\" | \"arbitrage\". Currently\n                            advisory only -- Grok prompt is unified.\n* ``target_did`` (str)   -- VERIFY_SKUS (merchant0-verify-001) only.\n                            The DID to be verified. NOT the buyer's DID.\n* ``subscription_id`` (str)\n                        -- PROOF_SKUS (merchant0-proof-001) only.\n                            Optional; if absent the most-recent active\n                            subscription for the buyer is used.\n* ``dry_run`` (bool)     -- skips invoice / subscription side effects;\n                            delivery handlers still run for testing."
+    TrialGrantBody:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+          default: ''
+        referral_code:
+          type: string
+          title: Referral Code
+          default: ''
+      type: object
+      title: TrialGrantBody
+      description: POST /api/ap2/trial-grant body (codebase BaseModel convention).
+    AP2SignBody:
+      properties:
+        contract_id:
+          type: string
+          title: Contract Id
+        buyer_signature:
+          type: string
+          title: Buyer Signature
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
+      type: object
+      required:
+      - contract_id
+      - buyer_signature
+      title: AP2SignBody
+      description: "POST /api/ap2/sign request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\",\"buyer_signature\":\"...\"}\n\nADVOCATE_v1.0 (MP #54, Deviation 1): ``buyer_did`` is accepted\noptionally so the Advocate's BUYER_MISMATCH validation can fire\nwhen callers identify themselves at sign time. Existing buyer\nagents that omit this field keep their pre-MP-#54 behaviour --\nthe Advocate skips the BUYER_MISMATCH check (other validations\nstill run) and the sign handler proceeds as before."
+    TrialExecuteBody:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          default: ''
+        trial_nonce:
+          type: string
+          title: Trial Nonce
+          default: ''
+        query:
+          type: string
+          title: Query
+          default: ''
+      type: object
+      title: TrialExecuteBody
+      description: POST /api/ap2/trial-execute body (codebase BaseModel convention).
+    AP2IntentRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        buyer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Name
+        items:
+          items:
+            type: object
+          type: array
+          title: Items
+        subtotal:
+          type: number
+          title: Subtotal
+        currency:
+          type: string
+          title: Currency
+          default: USD
+        delivery_region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Region
+        payment_method_preference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Method Preference
+      type: object
+      required:
+      - buyer_did
+      - items
+      - subtotal
+      title: AP2IntentRequest
+      description: AP2 Intent submission request.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DisputeFileRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        contract_id:
+          type: string
+          title: Contract Id
+        execution_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Execution Id
+        dispute_type:
+          type: string
+          title: Dispute Type
+        description:
+          type: string
+          title: Description
+      type: object
+      required:
+      - buyer_did
+      - contract_id
+      - dispute_type
+      - description
+      title: DisputeFileRequest
+      description: POST /api/ap2/dispute body.
+    AP2NegotiateBody:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        item_id:
+          type: string
+          title: Item Id
+        quantity:
+          type: integer
+          minimum: 1.0
+          title: Quantity
+          default: 1
+      type: object
+      required:
+      - buyer_did
+      - item_id
+      title: AP2NegotiateBody
+      description: "POST /api/ap2/negotiate request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"buyer_did\":\"did:web:...\",\"item_id\":\"...\",\"quantity\":1}"
+    Ap2StrategistReviewActionBody:
+      properties:
+        ceo_token:
+          type: string
+          title: Ceo Token
+        note:
+          type: string
+          title: Note
+          default: ''
+      type: object
+      required:
+      - ceo_token
+      title: Ap2StrategistReviewActionBody
+      description: POST body for CEO approve/reject on Strategist-gated AP2 contracts.
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

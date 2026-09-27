@@ -1,0 +1,102 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Diplomat API
+  version: '2026.1'
+  description: 'Operations tagged Diplomat across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Diplomat
+paths:
+  /api/diplomat/status:
+    get:
+      summary: Get Diplomat Status
+      description: 'TREASURER pattern. Public. Rule #11 -- no buyer_did fields.'
+      operationId: get_diplomat_status_api_diplomat_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Diplomat Status Api Diplomat Status Get
+      tags:
+      - Diplomat
+  /api/diplomat/reputation/reset:
+    post:
+      summary: Diplomat Reputation Reset
+      description: 'CEO-only. Rule #11 -- response surfaces only the DID hash.'
+      operationId: diplomat_reputation_reset_api_diplomat_reputation_reset_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReputationResetRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Diplomat Reputation Reset Api Diplomat Reputation Reset Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Diplomat
+components:
+  schemas:
+    ReputationResetRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        buyer_did:
+          type: string
+          title: Buyer Did
+      type: object
+      required:
+      - sandbox_token
+      - buyer_did
+      title: ReputationResetRequest
+      description: POST /api/diplomat/reputation/reset body.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

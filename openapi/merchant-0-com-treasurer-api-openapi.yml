@@ -1,0 +1,29 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Treasurer API
+  version: '2026.1'
+  description: 'Operations tagged Treasurer across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Treasurer
+paths:
+  /api/treasurer/status:
+    get:
+      summary: Get Treasurer Status
+      description: 'TREASURER_v1.0 (MP #52, Task 4.1). Public.'
+      operationId: get_treasurer_status_api_treasurer_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Treasurer Status Api Treasurer Status Get
+      tags:
+      - Treasurer
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

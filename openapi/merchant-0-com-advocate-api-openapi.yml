@@ -1,0 +1,162 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Advocate API
+  version: '2026.1'
+  description: 'Operations tagged Advocate across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Advocate
+paths:
+  /api/advocate/disputes:
+    get:
+      summary: Get Advocate Disputes
+      description: CEO-only dispute list. Auth via sandbox_token query/body.
+      operationId: get_advocate_disputes_api_advocate_disputes_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Advocate Disputes Api Advocate Disputes Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Advocate
+  /api/advocate/disputes/{dispute_id}/resolve:
+    post:
+      summary: Resolve Advocate Dispute
+      description: CEO-only dispute resolution.
+      operationId: resolve_advocate_dispute_api_advocate_disputes__dispute_id__resolve_post
+      parameters:
+      - name: dispute_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Dispute Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DisputeResolveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Resolve Advocate Dispute Api Advocate Disputes  Dispute Id  Resolve Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Advocate
+  /api/advocate/status:
+    get:
+      summary: Get Advocate Status
+      description: Public advocate metrics + HF-51.x probe verification.
+      operationId: get_advocate_status_api_advocate_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Advocate Status Api Advocate Status Get
+      tags:
+      - Advocate
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    DisputeResolveRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        resolution:
+          type: string
+          title: Resolution
+        status:
+          type: string
+          title: Status
+        advocate_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advocate Notes
+      type: object
+      required:
+      - sandbox_token
+      - resolution
+      - status
+      title: DisputeResolveRequest
+      description: POST /api/advocate/disputes/{id}/resolve body.
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

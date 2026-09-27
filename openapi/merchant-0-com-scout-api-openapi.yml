@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Scout API
+  version: '2026.1'
+  description: 'Operations tagged Scout across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Scout
+paths:
+  /api/scout/status:
+    get:
+      summary: Get Scout Status
+      description: 'SCOUT_v1.0 (MP #50, Task 5.5). Public, no auth required.
+
+
+        Returns a typed ScoutStatusResponse serialised to dict. Reads
+
+        aggregate counts from scout_proposals; never exposes any individual
+
+        row contents -- safe for unauthenticated discovery.'
+      operationId: get_scout_status_api_scout_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Scout Status Api Scout Status Get
+      tags:
+      - Scout
+  /api/scout/proposals:
+    get:
+      summary: List Scout Proposals
+      description: 'SCOUT_v1.0 (MP #50, Task 5.1). CEO-auth.
+
+
+        Lists proposals filtered by optional ``status`` query parameter,
+
+        plus aggregate counts and the count of auto-approved rows still in
+
+        their 24h veto window. Auth via ``?sandbox_token=`` query parameter
+
+        compared against _GENESIS_TOKEN (CEO_PRODUCTION_TOKEN env). Missing
+
+        or wrong token returns HTTP 401 (matches MP #50 Probe 50.3).'
+      operationId: list_scout_proposals_api_scout_proposals_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 20
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response List Scout Proposals Api Scout Proposals Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Scout
+  /api/scout/proposals/{proposal_id}/approve:
+    post:
+      summary: Approve Scout Proposal
+      description: 'SCOUT_v1.0 (MP #50, Task 5.2). CEO-auth.
+
+
+        Approves a PENDING_CEO_REVIEW proposal. Inserts into a2a_catalog
+
+        (available=true) and updates scout_proposals.status to APPROVED.
+
+        404 if not found; 422 if status != PENDING_CEO_REVIEW.'
+      operationId: approve_scout_proposal_api_scout_proposals__proposal_id__approve_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoutApproveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Approve Scout Proposal Api Scout Proposals  Proposal Id  Approve Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Scout
+  /api/scout/proposals/{proposal_id}/reject:
+    post:
+      summary: Reject Scout Proposal
+      description: 'SCOUT_v1.0 (MP #50, Task 5.3). CEO-auth.
+
+
+        Rejects a PENDING_CEO_REVIEW proposal (no catalog impact). 422 if
+
+        status is AUTO_APPROVED (must veto, not reject) or APPROVED (already
+
+        live -- the CEO disables via the catalog endpoint instead).'
+      operationId: reject_scout_proposal_api_scout_proposals__proposal_id__reject_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoutRejectRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Reject Scout Proposal Api Scout Proposals  Proposal Id  Reject Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Scout
+  /api/scout/proposals/{proposal_id}/veto:
+    post:
+      summary: Veto Scout Proposal
+      description: 'SCOUT_v1.0 (MP #50, Task 5.4). CEO-auth.
+
+
+        Vetoes an AUTO_APPROVED proposal within its 24h veto window. Sets
+
+        the corresponding a2a_catalog row available=false (preserves audit
+
+        trail) and updates scout_proposals.status to VETOED. 422 if:
+
+        - status != AUTO_APPROVED
+
+        - veto_deadline has passed (window expired)
+
+        - catalog_sku is NULL (shouldn''t happen but guard anyway)'
+      operationId: veto_scout_proposal_api_scout_proposals__proposal_id__veto_post
+      parameters:
+      - name: proposal_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Proposal Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScoutVetoRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Veto Scout Proposal Api Scout Proposals  Proposal Id  Veto Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Scout
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ScoutVetoRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+      type: object
+      required:
+      - sandbox_token
+      title: ScoutVetoRequest
+      description: POST /api/scout/proposals/{id}/veto body.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ScoutApproveRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+      type: object
+      required:
+      - sandbox_token
+      title: ScoutApproveRequest
+      description: POST /api/scout/proposals/{id}/approve body.
+    ScoutRejectRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        rejection_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rejection Reason
+          default: ''
+      type: object
+      required:
+      - sandbox_token
+      title: ScoutRejectRequest
+      description: 'POST /api/scout/proposals/{id}/reject body.
+
+
+        rejection_reason is optional but logged when present.'
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

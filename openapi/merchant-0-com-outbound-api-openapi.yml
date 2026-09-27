@@ -1,0 +1,171 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Outbound API
+  version: '2026.1'
+  description: 'Operations tagged Outbound across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Outbound
+paths:
+  /api/outbound/status:
+    get:
+      summary: Get Outbound Status
+      description: Public outreach status -- aggregate counts only (no row contents).
+      operationId: get_outbound_status_api_outbound_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Outbound Status Api Outbound Status Get
+      tags:
+      - Outbound
+  /api/outbound/targets:
+    get:
+      summary: Get Outbound Targets
+      description: CEO outreach target list (sandbox_token auth).
+      operationId: get_outbound_targets_api_outbound_targets_get
+      parameters:
+      - name: sandbox_token
+        in: query
+        required: false
+        schema:
+          type: string
+          default: ''
+          title: Sandbox Token
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 50
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Outbound Targets Api Outbound Targets Get
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Outbound
+    post:
+      summary: Add Outbound Target
+      description: CEO adds an outreach target (sandbox_token auth). Idempotent.
+      operationId: add_outbound_target_api_outbound_targets_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutboundAddTargetBody'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Add Outbound Target Api Outbound Targets Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Outbound
+  /api/outbound/run:
+    post:
+      summary: Run Outbound Now
+      description: CEO on-demand outreach cycle (sandbox_token auth).
+      operationId: run_outbound_now_api_outbound_run_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OutboundAddTargetBody'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Run Outbound Now Api Outbound Run Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Outbound
+components:
+  schemas:
+    OutboundAddTargetBody:
+      properties:
+        target_url:
+          type: string
+          title: Target Url
+          default: ''
+        target_type:
+          type: string
+          title: Target Type
+          default: directory
+        target_name:
+          type: string
+          title: Target Name
+          default: ''
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+          default: ''
+      type: object
+      title: OutboundAddTargetBody
+      description: POST /api/outbound/targets request body.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

@@ -1,0 +1,103 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Publicist API
+  version: '2026.1'
+  description: 'Operations tagged Publicist across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Publicist
+paths:
+  /api/publicist/manifest:
+    get:
+      summary: Get Publicist Manifest
+      description: Public discovery manifest (Task 2.4). type=agent|did|ucp.
+      operationId: get_publicist_manifest_api_publicist_manifest_get
+      parameters:
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          default: agent
+          title: Type
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Publicist
+  /api/publicist/catalog:
+    get:
+      summary: Get Publicist Catalog
+      description: Public catalog broadcast (Task 3.1). 5-minute in-memory cache.
+      operationId: get_publicist_catalog_api_publicist_catalog_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Publicist Catalog Api Publicist Catalog Get
+      tags:
+      - Publicist
+  /api/publicist/status:
+    get:
+      summary: Get Publicist Status
+      description: 'Public Publicist metrics (Task 5.1). Rule #11: no buyer_did.'
+      operationId: get_publicist_status_api_publicist_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Publicist Status Api Publicist Status Get
+      tags:
+      - Publicist
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

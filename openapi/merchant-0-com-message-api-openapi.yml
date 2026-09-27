@@ -1,0 +1,34 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Message API
+  version: '2026.1'
+  description: 'Operations tagged Message across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Message
+paths:
+  /message/send:
+    post:
+      summary: A2A Message Send
+      description: 'Minimal JSON-RPC 2.0 handler for A2A ``message/send`` (registry health / discovery).
+
+
+        **No database, no outbound HTTP** -- only reads the request body, parses JSON when
+
+        present, and returns a fixed payload. Accepts full JSON-RPC 2.0 or simpler JSON
+
+        bodies; always HTTP **200**. Non-JSON-RPC payloads get ``id: null``.'
+      operationId: a2a_message_send_message_send_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Message
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

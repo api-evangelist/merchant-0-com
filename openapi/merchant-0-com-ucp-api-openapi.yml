@@ -1,0 +1,437 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Ucp API
+  version: '2026.1'
+  description: 'Operations tagged Ucp across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Ucp
+paths:
+  /api/ucp/capabilities:
+    get:
+      summary: List Capabilities
+      description: List all UCP capabilities.
+      operationId: list_capabilities_api_ucp_capabilities_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Ucp
+  /api/ucp/identity:
+    get:
+      summary: Get Identity
+      description: Get Merchant-0's verifiable identity.
+      operationId: get_identity_api_ucp_identity_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Ucp
+  /api/ucp/catalog/search:
+    post:
+      summary: Search Catalog
+      description: 'Search product catalog.
+
+
+        UCP Capability: dev.ucp.catalog.search'
+      operationId: search_catalog_api_ucp_catalog_search_post
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Q
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+    get:
+      summary: Search Catalog
+      description: 'Search product catalog.
+
+
+        UCP Capability: dev.ucp.catalog.search'
+      operationId: search_catalog_api_ucp_catalog_search_get
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: string
+          title: Q
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogSearchRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+  /api/ucp/catalog/details/{sku}:
+    get:
+      summary: Get Product Details
+      description: 'Get detailed product information.
+
+
+        UCP Capability: dev.ucp.catalog.details'
+      operationId: get_product_details_api_ucp_catalog_details__sku__get
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sku
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+  /api/ucp/inventory/check/{sku}:
+    get:
+      summary: Check Inventory
+      description: 'Check real-time stock availability.
+
+
+        UCP Capability: dev.ucp.inventory.check
+
+        A2A CATALOG v1.0: CEO catalog SKUs are resolved from Supabase (or
+
+        static seed); other SKUs fall through to the MCP inventory server.'
+      operationId: check_inventory_api_ucp_inventory_check__sku__get
+      parameters:
+      - name: sku
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Sku
+      - name: quantity
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Quantity
+      - name: X-Payment
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Payment
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+  /api/ucp/negotiate:
+    post:
+      summary: Negotiate Quote
+      description: 'Request a quote with dynamic pricing.
+
+
+        UCP Capability: dev.ucp.shopping.negotiate
+
+        Uses Diplomat with sentiment-based pricing intelligence.'
+      operationId: negotiate_quote_api_ucp_negotiate_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NegotiateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+  /api/ucp/checkout:
+    post:
+      summary: Checkout
+      description: 'Complete checkout flow.
+
+
+        UCP Capability: dev.ucp.shopping.checkout
+
+        Combines intent validation + cart signing in one call.'
+      operationId: checkout_api_ucp_checkout_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+  /api/ucp/manifest:
+    get:
+      summary: Get Ucp Manifest Alias
+      description: 'Alias of /.well-known/ucp-manifest.json.
+
+
+        Returns the same UCPManifest payload under the MP-specified path so
+
+        agent SDKs written against /api/ucp/manifest succeed out of the box.'
+      operationId: get_ucp_manifest_alias_api_ucp_manifest_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Ucp
+  /api/ucp/inventory/check:
+    get:
+      summary: Check Inventory Alias
+      description: 'Inventory-check alias at the path-param-less URL.
+
+
+        Without ``?sku=``: returns the A2A service catalog listing (A2A CATALOG
+
+        v1.0). With ``?sku=``: resolves CEO catalog first, then MCP (same
+
+        selection order as /api/ucp/inventory/check/{sku}).'
+      operationId: check_inventory_alias_api_ucp_inventory_check_get
+      parameters:
+      - name: sku
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sku
+      - name: quantity
+        in: query
+        required: false
+        schema:
+          type: integer
+          default: 1
+          title: Quantity
+      - name: X-Payment
+        in: header
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: X-Payment
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Ucp
+components:
+  schemas:
+    CheckoutRequest:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+        buyer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Name
+        items:
+          items:
+            type: object
+          type: array
+          title: Items
+        delivery_region:
+          type: string
+          title: Delivery Region
+          default: US
+        payment_method:
+          type: string
+          title: Payment Method
+          default: stripe
+      type: object
+      required:
+      - buyer_did
+      - items
+      title: CheckoutRequest
+      description: Combined checkout request.
+    CatalogSearchRequest:
+      properties:
+        query:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Query
+        category:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Category
+        min_price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Min Price
+        max_price:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Price
+        in_stock_only:
+          type: boolean
+          title: In Stock Only
+          default: true
+        limit:
+          type: integer
+          maximum: 100.0
+          minimum: 1.0
+          title: Limit
+          default: 10
+      type: object
+      title: CatalogSearchRequest
+      description: Catalog search request.
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    NegotiateRequest:
+      properties:
+        requesting_agent_did:
+          type: string
+          title: Requesting Agent Did
+        product_sku:
+          type: string
+          title: Product Sku
+        quantity:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Quantity
+        max_price_per_unit:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Price Per Unit
+        delivery_region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Region
+      type: object
+      required:
+      - requesting_agent_did
+      - product_sku
+      - quantity
+      title: NegotiateRequest
+      description: Quote/negotiation request.
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

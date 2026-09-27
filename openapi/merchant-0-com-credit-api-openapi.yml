@@ -1,0 +1,61 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Credit API
+  version: '2026.1'
+  description: 'Operations tagged Credit across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Credit
+paths:
+  /api/credit/status:
+    get:
+      summary: Get Credit Status Endpoint
+      description: 'Machine-readable CEO operational credit health.
+
+
+        Designed for agent consumption: an agent can poll this endpoint
+
+        before negotiating an expensive deal to avoid wasted round trips
+
+        when the credit pool is exhausted. The CEO dashboard also reads
+
+        this via a same-origin proxy.
+
+
+        Public surface intentionally minimal -- exposes health band,
+
+        utilization percentage, and remaining USD headroom but NEVER the
+
+        raw PHP credit limit. The raw limit is operationally sensitive
+
+        (gives an attacker the exact spending ceiling); the available_usd
+
+        figure is the only number an external agent legitimately needs.
+
+
+        Distinct from the older /credit-health endpoint (zero-state
+
+        scaffold from Phase 36, never wired to ap2_executions). This
+
+        endpoint reads live spend data. /credit-health is preserved for
+
+        backward compatibility with the boardroom Credit Tank widget.
+
+
+        No authentication required -- safe-by-design response surface.'
+      operationId: get_credit_status_endpoint_api_credit_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Credit Status Endpoint Api Credit Status Get
+      tags:
+      - Credit
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json
