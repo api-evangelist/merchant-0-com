@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Ucp API
+  title: Merchant-0 A2A Protocol Server Ucp API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Ucp across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Ucp
 paths:
@@ -309,6 +306,15 @@ paths:
       - Ucp
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     CheckoutRequest:
       properties:
         buyer_did:
@@ -373,15 +379,6 @@ components:
       type: object
       title: CatalogSearchRequest
       description: Catalog search request.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -432,6 +429,3 @@ components:
       - quantity
       title: NegotiateRequest
       description: Quote/negotiation request.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json

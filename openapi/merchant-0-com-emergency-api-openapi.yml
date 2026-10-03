@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Emergency API
+  title: Merchant-0 A2A Protocol Server Emergency API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Emergency across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Emergency
 paths:
@@ -137,24 +134,6 @@ paths:
       - Emergency
 components:
   schemas:
-    EmergencyActionRequest:
-      properties:
-        ceo_token:
-          type: string
-          title: Ceo Token
-        ceo_pin:
-          type: string
-          title: Ceo Pin
-        confirmation:
-          type: string
-          title: Confirmation
-      type: object
-      required:
-      - ceo_token
-      - ceo_pin
-      - confirmation
-      title: EmergencyActionRequest
-      description: "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."
     HTTPValidationError:
       properties:
         detail:
@@ -185,6 +164,21 @@ components:
       - msg
       - type
       title: ValidationError
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json
+    EmergencyActionRequest:
+      properties:
+        ceo_token:
+          type: string
+          title: Ceo Token
+        ceo_pin:
+          type: string
+          title: Ceo Pin
+        confirmation:
+          type: string
+          title: Confirmation
+      type: object
+      required:
+      - ceo_token
+      - ceo_pin
+      - confirmation
+      title: EmergencyActionRequest
+      description: "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."

@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Settlement API
+  title: Merchant-0 A2A Protocol Server Settlement API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Settlement across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Settlement
 paths:
@@ -96,15 +93,6 @@ paths:
       - Settlement
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     SettlementConfirmBody:
       properties:
         sandbox_token:
@@ -128,6 +116,15 @@ components:
       type: object
       title: SettlementConfirmBody
       description: POST /api/settlement/confirm request body (codebase BaseModel convention).
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ValidationError:
       properties:
         loc:
@@ -149,6 +146,3 @@ components:
       - msg
       - type
       title: ValidationError
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json

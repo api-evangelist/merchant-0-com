@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Advocate API
+  title: Merchant-0 A2A Protocol Server Advocate API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Advocate across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Advocate
 paths:
@@ -104,6 +101,29 @@ paths:
       - Advocate
 components:
   schemas:
+    DisputeResolveRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        resolution:
+          type: string
+          title: Resolution
+        status:
+          type: string
+          title: Status
+        advocate_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advocate Notes
+      type: object
+      required:
+      - sandbox_token
+      - resolution
+      - status
+      title: DisputeResolveRequest
+      description: POST /api/advocate/disputes/{id}/resolve body.
     HTTPValidationError:
       properties:
         detail:
@@ -134,29 +154,3 @@ components:
       - msg
       - type
       title: ValidationError
-    DisputeResolveRequest:
-      properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-        resolution:
-          type: string
-          title: Resolution
-        status:
-          type: string
-          title: Status
-        advocate_notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Advocate Notes
-      type: object
-      required:
-      - sandbox_token
-      - resolution
-      - status
-      title: DisputeResolveRequest
-      description: POST /api/advocate/disputes/{id}/resolve body.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json

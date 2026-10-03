@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Ap2 API
+  title: Merchant-0 A2A Protocol Server Ap2 API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Ap2 across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Ap2
 paths:
@@ -566,89 +563,42 @@ paths:
       - Ap2
 components:
   schemas:
-    AP2ExecuteBody:
+    HTTPValidationError:
       properties:
-        contract_id:
-          type: string
-          title: Contract Id
-        query:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Query
-        dry_run:
-          type: boolean
-          title: Dry Run
-          default: false
-        target_did:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Target Did
-        subscription_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subscription Id
-        report_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Report Type
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - contract_id
-      title: AP2ExecuteBody
-      description: "POST /api/ap2/execute request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\"}\n\nOptional fields by deliverable SKU (CATALOG_EXPANSION v1.0 / MP #40):\n\n* ``query`` (str)        -- INTEL_SKUS (merchant0-intel-001),\n                            REPORT_SKUS (merchant0-report-001).\n                            Free-form trade question; required for\n                            report-001 to dispatch Grok.\n* ``report_type`` (str)  -- REPORT_SKUS hint: \"trade_route\" |\n                            \"regulatory\" | \"arbitrage\". Currently\n                            advisory only -- Grok prompt is unified.\n* ``target_did`` (str)   -- VERIFY_SKUS (merchant0-verify-001) only.\n                            The DID to be verified. NOT the buyer's DID.\n* ``subscription_id`` (str)\n                        -- PROOF_SKUS (merchant0-proof-001) only.\n                            Optional; if absent the most-recent active\n                            subscription for the buyer is used.\n* ``dry_run`` (bool)     -- skips invoice / subscription side effects;\n                            delivery handlers still run for testing."
-    TrialGrantBody:
+      title: HTTPValidationError
+    DisputeFileRequest:
       properties:
         buyer_did:
           type: string
           title: Buyer Did
-          default: ''
-        referral_code:
-          type: string
-          title: Referral Code
-          default: ''
-      type: object
-      title: TrialGrantBody
-      description: POST /api/ap2/trial-grant body (codebase BaseModel convention).
-    AP2SignBody:
-      properties:
         contract_id:
           type: string
           title: Contract Id
-        buyer_signature:
-          type: string
-          title: Buyer Signature
-        buyer_did:
+        execution_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Buyer Did
+          title: Execution Id
+        dispute_type:
+          type: string
+          title: Dispute Type
+        description:
+          type: string
+          title: Description
       type: object
       required:
+      - buyer_did
       - contract_id
-      - buyer_signature
-      title: AP2SignBody
-      description: "POST /api/ap2/sign request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\",\"buyer_signature\":\"...\"}\n\nADVOCATE_v1.0 (MP #54, Deviation 1): ``buyer_did`` is accepted\noptionally so the Advocate's BUYER_MISMATCH validation can fire\nwhen callers identify themselves at sign time. Existing buyer\nagents that omit this field keep their pre-MP-#54 behaviour --\nthe Advocate skips the BUYER_MISMATCH check (other validations\nstill run) and the sign handler proceeds as before."
-    TrialExecuteBody:
-      properties:
-        trial_id:
-          type: string
-          title: Trial Id
-          default: ''
-        trial_nonce:
-          type: string
-          title: Trial Nonce
-          default: ''
-        query:
-          type: string
-          title: Query
-          default: ''
-      type: object
-      title: TrialExecuteBody
-      description: POST /api/ap2/trial-execute body (codebase BaseModel convention).
+      - dispute_type
+      - description
+      title: DisputeFileRequest
+      description: POST /api/ap2/dispute body.
     AP2IntentRequest:
       properties:
         buyer_did:
@@ -688,15 +638,55 @@ components:
       - subtotal
       title: AP2IntentRequest
       description: AP2 Intent submission request.
-    HTTPValidationError:
+    AP2SignBody:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        contract_id:
+          type: string
+          title: Contract Id
+        buyer_signature:
+          type: string
+          title: Buyer Signature
+        buyer_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Buyer Did
       type: object
-      title: HTTPValidationError
+      required:
+      - contract_id
+      - buyer_signature
+      title: AP2SignBody
+      description: "POST /api/ap2/sign request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\",\"buyer_signature\":\"...\"}\n\nADVOCATE_v1.0 (MP #54, Deviation 1): ``buyer_did`` is accepted\noptionally so the Advocate's BUYER_MISMATCH validation can fire\nwhen callers identify themselves at sign time. Existing buyer\nagents that omit this field keep their pre-MP-#54 behaviour --\nthe Advocate skips the BUYER_MISMATCH check (other validations\nstill run) and the sign handler proceeds as before."
+    TrialExecuteBody:
+      properties:
+        trial_id:
+          type: string
+          title: Trial Id
+          default: ''
+        trial_nonce:
+          type: string
+          title: Trial Nonce
+          default: ''
+        query:
+          type: string
+          title: Query
+          default: ''
+      type: object
+      title: TrialExecuteBody
+      description: POST /api/ap2/trial-execute body (codebase BaseModel convention).
+    TrialGrantBody:
+      properties:
+        buyer_did:
+          type: string
+          title: Buyer Did
+          default: ''
+        referral_code:
+          type: string
+          title: Referral Code
+          default: ''
+      type: object
+      title: TrialGrantBody
+      description: POST /api/ap2/trial-grant body (codebase BaseModel convention).
     ValidationError:
       properties:
         loc:
@@ -718,33 +708,54 @@ components:
       - msg
       - type
       title: ValidationError
-    DisputeFileRequest:
+    Ap2StrategistReviewActionBody:
       properties:
-        buyer_did:
+        ceo_token:
           type: string
-          title: Buyer Did
+          title: Ceo Token
+        note:
+          type: string
+          title: Note
+          default: ''
+      type: object
+      required:
+      - ceo_token
+      title: Ap2StrategistReviewActionBody
+      description: POST body for CEO approve/reject on Strategist-gated AP2 contracts.
+    AP2ExecuteBody:
+      properties:
         contract_id:
           type: string
           title: Contract Id
-        execution_id:
+        query:
           anyOf:
           - type: string
           - type: 'null'
-          title: Execution Id
-        dispute_type:
-          type: string
-          title: Dispute Type
-        description:
-          type: string
-          title: Description
+          title: Query
+        dry_run:
+          type: boolean
+          title: Dry Run
+          default: false
+        target_did:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Did
+        subscription_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Id
+        report_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Report Type
       type: object
       required:
-      - buyer_did
       - contract_id
-      - dispute_type
-      - description
-      title: DisputeFileRequest
-      description: POST /api/ap2/dispute body.
+      title: AP2ExecuteBody
+      description: "POST /api/ap2/execute request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"contract_id\":\"...\"}\n\nOptional fields by deliverable SKU (CATALOG_EXPANSION v1.0 / MP #40):\n\n* ``query`` (str)        -- INTEL_SKUS (merchant0-intel-001),\n                            REPORT_SKUS (merchant0-report-001).\n                            Free-form trade question; required for\n                            report-001 to dispatch Grok.\n* ``report_type`` (str)  -- REPORT_SKUS hint: \"trade_route\" |\n                            \"regulatory\" | \"arbitrage\". Currently\n                            advisory only -- Grok prompt is unified.\n* ``target_did`` (str)   -- VERIFY_SKUS (merchant0-verify-001) only.\n                            The DID to be verified. NOT the buyer's DID.\n* ``subscription_id`` (str)\n                        -- PROOF_SKUS (merchant0-proof-001) only.\n                            Optional; if absent the most-recent active\n                            subscription for the buyer is used.\n* ``dry_run`` (bool)     -- skips invoice / subscription side effects;\n                            delivery handlers still run for testing."
     AP2NegotiateBody:
       properties:
         buyer_did:
@@ -764,20 +775,3 @@ components:
       - item_id
       title: AP2NegotiateBody
       description: "POST /api/ap2/negotiate request body.\n\nMatches the MP pre-flight test body verbatim:\n  {\"buyer_did\":\"did:web:...\",\"item_id\":\"...\",\"quantity\":1}"
-    Ap2StrategistReviewActionBody:
-      properties:
-        ceo_token:
-          type: string
-          title: Ceo Token
-        note:
-          type: string
-          title: Note
-          default: ''
-      type: object
-      required:
-      - ceo_token
-      title: Ap2StrategistReviewActionBody
-      description: POST body for CEO approve/reject on Strategist-gated AP2 contracts.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json
