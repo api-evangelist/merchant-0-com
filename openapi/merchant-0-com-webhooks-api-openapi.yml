@@ -1,0 +1,93 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Webhooks API
+  version: '2026.1'
+  description: 'Operations tagged Webhooks across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Webhooks
+paths:
+  /api/webhooks/wise:
+    post:
+      summary: Wise Webhook Receiver
+      description: 'Inbound Wise webhook receiver -- AP2 auto-settlement (MP #42).
+
+
+        Contract (always-200):
+
+        - HTTP 200 on every path, including signature failure, parse
+
+        failure, unknown event type, and DB error. Failures are
+
+        recorded via StructuredLogger; the JSON body status + reason
+
+        fields describe the outcome.
+
+
+        Validation order (MP rule #11):
+
+        1. Read raw body + headers
+
+        2. RSA-SHA256 signature verification against Wise''s PUBLISHED
+
+        production public key (NO DB operations until this passes)
+
+        3. JSON parse
+
+        4. X-Test-Notification handling (Wise sends this to verify the
+
+        callback URL when a subscription is being set up; we MUST
+
+        respond 2xx)
+
+        5. Event normalization via parse_wise_event
+
+        6. Filter: must be an inbound-credit event with transaction_type
+
+        == "credit" AND currency == "USD"
+
+        7. 3-criteria settlement matcher
+
+
+        Security (MP rule #8, Path A):
+
+        - No shared secret exists in the Wise protocol; verification uses
+
+        the public key embedded at module-scope (safe -- public material)
+
+        - X-Signature-SHA256 header value is logged only as an 8-char
+
+        prefix for forensic correlation
+
+        - The cryptography library handles constant-time RSA verification
+
+        internally; no application-level timing leaks
+
+
+        Coexistence with execute-time poll (check_wise_inbound_transfer):
+
+        The existing poll runs synchronously during /api/ap2/execute and
+
+        may have already set settlement_confirmed=true on a row. This
+
+        webhook UPDATEs the same row; the matcher only considers rows
+
+        with settlement_confirmed=false in its candidate pool, so a
+
+        previously-confirmed row is silently passed over (no double-
+
+        confirm, no false alarm).'
+      operationId: wise_webhook_receiver_api_webhooks_wise_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Webhooks
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

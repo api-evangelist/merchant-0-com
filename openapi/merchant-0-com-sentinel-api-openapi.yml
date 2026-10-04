@@ -1,0 +1,129 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Sentinel API
+  version: '2026.1'
+  description: 'Operations tagged Sentinel across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Sentinel
+paths:
+  /api/sentinel/whitelist/add:
+    post:
+      summary: Sentinel Whitelist Add
+      description: 'CEO-only: add a buyer DID to the Sentinel whitelist.'
+      operationId: sentinel_whitelist_add_api_sentinel_whitelist_add_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhitelistMutateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Sentinel Whitelist Add Api Sentinel Whitelist Add Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Sentinel
+  /api/sentinel/whitelist/remove:
+    post:
+      summary: Sentinel Whitelist Remove
+      description: 'CEO-only: remove a buyer DID from the Sentinel whitelist.'
+      operationId: sentinel_whitelist_remove_api_sentinel_whitelist_remove_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WhitelistMutateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Sentinel Whitelist Remove Api Sentinel Whitelist Remove Post
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+      tags:
+      - Sentinel
+  /api/sentinel/status:
+    get:
+      summary: Get Sentinel Status
+      description: 'Public Sentinel metrics. Rule #11: no buyer_did fields.'
+      operationId: get_sentinel_status_api_sentinel_status_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Sentinel Status Api Sentinel Status Get
+      tags:
+      - Sentinel
+components:
+  schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WhitelistMutateRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        buyer_did:
+          type: string
+          title: Buyer Did
+      type: object
+      required:
+      - sandbox_token
+      - buyer_did
+      title: WhitelistMutateRequest
+      description: POST /api/sentinel/whitelist/{add,remove} body.
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

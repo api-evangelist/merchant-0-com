@@ -1,0 +1,45 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Bank API
+  version: '2026.1'
+  description: 'Operations tagged Bank across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Bank
+paths:
+  /bank/usd-balance:
+    get:
+      summary: Get Usd Balance
+      description: 'Wise USD settlement account balance for the Treasury dashboard.
+
+
+        Zero-state: no inbound payments received, so balance is Decimal("0").
+
+        Response key names mirror the sandbox reference (see
+
+        src/merchant0/sandbox/mock_fintech_app.py get_usd_balance) so the
+
+        Treasury dashboard frontend consumes the same shape regardless of
+
+        which surface it calls.
+
+
+        IPA v2.0 specified endpoint. USD_SETTLEMENT_ACCOUNT = KEY 17 (future
+
+        VaultManager wiring). Manual harvest: CEO converts USD to PHP via
+
+        the Wise app; Merchant-0 does not perform the conversion.'
+      operationId: get_usd_balance_bank_usd_balance_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Bank
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

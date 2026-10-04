@@ -1,0 +1,47 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Credit Health API
+  version: '2026.1'
+  description: 'Operations tagged Credit Health across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Credit Health
+paths:
+  /credit-health:
+    get:
+      summary: Get Credit Health
+      description: 'VISA credit facility health and utilization.
+
+
+        Returns clean zero-state until live VISA data exists. Response keys
+
+        mirror the boardroom CreditHealth TypeScript interface and the
+
+        sandbox CreditHealthResponse Pydantic model exactly so the dashboard
+
+        works against either surface without change.
+
+
+        Phase 36 Credit System. VaultManager KEY 15 = CEO_VISA_OPERATIONAL_LIMIT.
+
+        VaultManager KEY 16 = VISA_CUMULATIVE_OUTSTANDING. Neither is wired
+
+        yet; once wired, replace the Decimal("0.00") outstanding seed with the
+
+        live value pulled from Supabase.'
+      operationId: get_credit_health_credit_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Credit Health Credit Health Get
+      tags:
+      - Credit Health
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

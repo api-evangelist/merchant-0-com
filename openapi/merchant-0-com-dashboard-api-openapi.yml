@@ -1,0 +1,50 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Dashboard API
+  version: '2026.1'
+  description: 'Operations tagged Dashboard across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Dashboard
+paths:
+  /api/dashboard/a2a:
+    get:
+      summary: Get Dashboard Data
+      description: 'Get A2A dashboard data.
+
+
+        A2A CATALOG v1.0: ``catalog_items_count`` reflects the CEO service
+
+        catalog (Supabase a2a_catalog when present, else static seed).
+
+
+        ucp.trust_score / mcp.products_count -- remain 0.0 and 0 until
+
+        their respective real metrics land; see A2A ENDPOINT PROVISIONING
+
+        v1.0 notes in-repo.
+
+
+        ucp.capabilities_count / ucp.regions / mcp.categories are honest
+
+        service declarations. diplomat from diplomat handler. ap2 block
+
+        merges handler stats with Supabase ap2_executions aggregate
+
+        (AP2 PAYMENT WIRING v1.0) for real total_executed and
+
+        total_volume_usd.'
+      operationId: get_dashboard_data_api_dashboard_a2a_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Dashboard
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

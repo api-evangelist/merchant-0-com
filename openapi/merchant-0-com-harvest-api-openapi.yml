@@ -1,0 +1,53 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Harvest API
+  version: '2026.1'
+  description: 'Operations tagged Harvest across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Harvest
+paths:
+  /harvest/history:
+    get:
+      summary: Get Harvest History
+      description: 'Harvest tracker state for the Treasury dashboard.
+
+
+        Zero-state: no trades have executed yet, so current_harvest_usd
+
+        is Decimal("0") and harvest_history is an empty list. The
+
+        harvest_target_usd is the CEO-configured threshold sourced from
+
+        the harvest_config singleton (HARVEST_THRESHOLD_CONFIG v1.0, MP
+
+        #46); it defaults to Decimal("0") when the DB is unreachable
+
+        AND no HARVEST_THRESHOLD_USD env var is set, which preserves
+
+        the original zero-state shape under failure. Response key names
+
+        mirror the sandbox reference (see
+
+        src/merchant0/sandbox/mock_fintech_app.py get_harvest_history)
+
+        so the Treasury dashboard frontend works against either surface
+
+        without change.
+
+
+        IPA v2.0 specified endpoint.'
+      operationId: get_harvest_history_harvest_history_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+      tags:
+      - Harvest
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json

@@ -1,0 +1,49 @@
+openapi: 3.2.0
+info:
+  title: Merchant 0 Com Sandbox API
+  version: '2026.1'
+  description: 'Operations tagged Sandbox across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.merchant-0.com
+  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
+tags:
+- name: Sandbox
+paths:
+  /sandbox/state:
+    get:
+      summary: Get Sandbox State
+      description: 'Current operational system state.
+
+
+        Consumed silently by the boardroom, ceo, and ceo/partners pages
+
+        (see module-level comment above). Returns zero/false/empty state
+
+        until live data is wired. Never raises for missing data -- always
+
+        returns a valid JSON payload matching the boardroom SandboxState
+
+        TypeScript interface so consumer pages render zero-state UI, not
+
+        an error banner.
+
+
+        Note: the path is intentionally kept as /sandbox/state for
+
+        frontend contract compatibility. This is a production endpoint
+
+        despite the name.'
+      operationId: get_sandbox_state_sandbox_state_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+                title: Response Get Sandbox State Sandbox State Get
+      tags:
+      - Sandbox
+x-refined-from:
+- merchant-0-com-openapi-original.json
+- merchant-0-com-openapi.json
