@@ -89,6 +89,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - AP2
+  tags_raw:
   - Ap2
   properties:
   - type: OpenAPI
@@ -161,6 +163,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Dashboards
+  tags_raw:
   - Dashboard
   properties:
   - type: OpenAPI
@@ -257,6 +261,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - MCP
+  tags_raw:
   - Mcp
   properties:
   - type: OpenAPI
@@ -391,6 +397,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -439,6 +447,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Universal Commerce Protocol
+  tags_raw:
   - Ucp
   properties:
   - type: OpenAPI
@@ -451,6 +461,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
@@ -475,6 +487,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/merchant-0-com-capability-edges.yml
+  name: Merchant-0 Business Capability Map
 - type: Overlay
   url: overlays/merchant-0-com-openapi-overlay.yaml
 - type: DomainSecurity
