@@ -30,7 +30,7 @@ tags:
 - Supply Chain
 - Southeast Asia
 - Decentralized Identity
-- agent-native
+- Agent-Native
 tags_raw:
 - Agents
 - Agent Commerce
@@ -59,6 +59,10 @@ apis:
   baseURL: https://api.merchant-0.com
   tags:
   - A2A
+  - Agent-Native
+  - Decentralized Identity
+  tags_raw:
+  - A2A
   - agent-native
   - Decentralized Identity
   properties:
@@ -85,6 +89,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - AP2
+  tags_raw:
   - Ap2
   properties:
   - type: OpenAPI
@@ -157,6 +163,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Dashboards
+  tags_raw:
   - Dashboard
   properties:
   - type: OpenAPI
@@ -253,6 +261,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - MCP
+  tags_raw:
   - Mcp
   properties:
   - type: OpenAPI
@@ -387,6 +397,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Subscription
+  tags_raw:
   - Subscriptions
   properties:
   - type: OpenAPI
@@ -435,6 +447,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Universal Commerce Protocol
+  tags_raw:
   - Ucp
   properties:
   - type: OpenAPI
@@ -447,6 +461,8 @@ apis:
   humanURL: https://merchant-0.com/
   baseURL: https://api.merchant-0.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
