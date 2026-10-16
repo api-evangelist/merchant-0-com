@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Ucp API
+  title: Merchant-0 A2A Protocol Server Ucp API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Ucp across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Ucp
 paths:
@@ -309,35 +306,44 @@ paths:
       - Ucp
 components:
   schemas:
-    NegotiateRequest:
+    HTTPValidationError:
       properties:
-        requesting_agent_did:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CheckoutRequest:
+      properties:
+        buyer_did:
           type: string
-          title: Requesting Agent Did
-        product_sku:
-          type: string
-          title: Product Sku
-        quantity:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Quantity
-        max_price_per_unit:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Max Price Per Unit
-        delivery_region:
+          title: Buyer Did
+        buyer_name:
           anyOf:
           - type: string
           - type: 'null'
+          title: Buyer Name
+        items:
+          items:
+            type: object
+          type: array
+          title: Items
+        delivery_region:
+          type: string
           title: Delivery Region
+          default: US
+        payment_method:
+          type: string
+          title: Payment Method
+          default: stripe
       type: object
       required:
-      - requesting_agent_did
-      - product_sku
-      - quantity
-      title: NegotiateRequest
-      description: Quote/negotiation request.
+      - buyer_did
+      - items
+      title: CheckoutRequest
+      description: Combined checkout request.
     CatalogSearchRequest:
       properties:
         query:
@@ -394,44 +400,32 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    NegotiateRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    CheckoutRequest:
-      properties:
-        buyer_did:
+        requesting_agent_did:
           type: string
-          title: Buyer Did
-        buyer_name:
+          title: Requesting Agent Did
+        product_sku:
+          type: string
+          title: Product Sku
+        quantity:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Quantity
+        max_price_per_unit:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Price Per Unit
+        delivery_region:
           anyOf:
           - type: string
           - type: 'null'
-          title: Buyer Name
-        items:
-          items:
-            type: object
-          type: array
-          title: Items
-        delivery_region:
-          type: string
           title: Delivery Region
-          default: US
-        payment_method:
-          type: string
-          title: Payment Method
-          default: stripe
       type: object
       required:
-      - buyer_did
-      - items
-      title: CheckoutRequest
-      description: Combined checkout request.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json
+      - requesting_agent_did
+      - product_sku
+      - quantity
+      title: NegotiateRequest
+      description: Quote/negotiation request.

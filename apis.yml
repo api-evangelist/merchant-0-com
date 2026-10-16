@@ -487,6 +487,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/merchant-0-com-capability-edges.yml
+  name: Merchant-0 Business Capability Map
 - type: Overlay
   url: overlays/merchant-0-com-openapi-overlay.yaml
 - type: DomainSecurity

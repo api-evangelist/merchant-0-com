@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Sentinel API
+  title: Merchant-0 A2A Protocol Server Sentinel API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Sentinel across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Sentinel
 paths:
@@ -80,6 +77,20 @@ paths:
       - Sentinel
 components:
   schemas:
+    WhitelistMutateRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        buyer_did:
+          type: string
+          title: Buyer Did
+      type: object
+      required:
+      - sandbox_token
+      - buyer_did
+      title: WhitelistMutateRequest
+      description: POST /api/sentinel/whitelist/{add,remove} body.
     HTTPValidationError:
       properties:
         detail:
@@ -110,20 +121,3 @@ components:
       - msg
       - type
       title: ValidationError
-    WhitelistMutateRequest:
-      properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-        buyer_did:
-          type: string
-          title: Buyer Did
-      type: object
-      required:
-      - sandbox_token
-      - buyer_did
-      title: WhitelistMutateRequest
-      description: POST /api/sentinel/whitelist/{add,remove} body.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json

@@ -2,16 +2,26 @@
 kin_checks:
   slug: merchant-0-com
   schema_version: 0.23.0
+<<<<<<<< HEAD:kin/checks-2026-10-09T213714.yml
   scored_at: '2026-10-09'
   run_ts: 2026-10-09T213714
+========
+  scored_at: '2026-10-11'
+  run_ts: 2026-10-11T110117
+>>>>>>>> @{u}:kin/checks-2026-10-11T110117.yml
   note: Actionable checks (missed + partial) in `checks`, plus the ids that did not
     apply in `na`. Everything else in rubric/scoring-0.23.0.yml was earned; counts
     below let you verify that.
   counts:
     total: 153
     earned: 22
+<<<<<<<< HEAD:kin/checks-2026-10-09T213714.yml
     partial: 20
     missed: 84
+========
+    partial: 19
+    missed: 85
+>>>>>>>> @{u}:kin/checks-2026-10-11T110117.yml
     na: 27
   checks:
   - id: newsroom_present
@@ -38,6 +48,13 @@ kin_checks:
     status: missed
     detail: 0 of 33 openapi documents pass; credited at 90% because of their provenance
       (unknown)
+<<<<<<<< HEAD:kin/checks-2026-10-09T213714.yml
+========
+  - id: servers_defined
+    status: missed
+    detail: 0 of 33 openapi documents pass; credited at 90% because of their provenance
+      (unknown)
+>>>>>>>> @{u}:kin/checks-2026-10-11T110117.yml
   - id: servers_resolvable
     status: missed
   - id: examples_present
@@ -202,11 +219,14 @@ kin_checks:
     earned: 4.5
     detail: 33 of 33 openapi documents pass; credited at 90% because of their provenance
       (unknown)
+<<<<<<<< HEAD:kin/checks-2026-10-09T213714.yml
   - id: servers_defined
     status: partial
     earned: 2.7
     detail: 33 of 33 openapi documents pass; credited at 90% because of their provenance
       (unknown)
+========
+>>>>>>>> @{u}:kin/checks-2026-10-11T110117.yml
   - id: operations_summary_coverage
     status: partial
     earned: 5.4

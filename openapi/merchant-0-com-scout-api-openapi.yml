@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Scout API
+  title: Merchant-0 A2A Protocol Server Scout API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Scout across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Scout
 paths:
@@ -217,35 +214,15 @@ paths:
       - Scout
 components:
   schemas:
-    ScoutRejectRequest:
+    HTTPValidationError:
       properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-        rejection_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rejection Reason
-          default: ''
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - sandbox_token
-      title: ScoutRejectRequest
-      description: 'POST /api/scout/proposals/{id}/reject body.
-
-
-        rejection_reason is optional but logged when present.'
-    ScoutApproveRequest:
-      properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-      type: object
-      required:
-      - sandbox_token
-      title: ScoutApproveRequest
-      description: POST /api/scout/proposals/{id}/approve body.
+      title: HTTPValidationError
     ScoutVetoRequest:
       properties:
         sandbox_token:
@@ -277,15 +254,32 @@ components:
       - msg
       - type
       title: ValidationError
-    HTTPValidationError:
+    ScoutApproveRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        sandbox_token:
+          type: string
+          title: Sandbox Token
       type: object
-      title: HTTPValidationError
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json
+      required:
+      - sandbox_token
+      title: ScoutApproveRequest
+      description: POST /api/scout/proposals/{id}/approve body.
+    ScoutRejectRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        rejection_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rejection Reason
+          default: ''
+      type: object
+      required:
+      - sandbox_token
+      title: ScoutRejectRequest
+      description: 'POST /api/scout/proposals/{id}/reject body.
+
+
+        rejection_reason is optional but logged when present.'

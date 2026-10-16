@@ -1,11 +1,8 @@
 openapi: 3.2.0
 info:
-  title: Merchant 0 Com Diplomat API
+  title: Merchant-0 A2A Protocol Server Diplomat API
+  description: Agent-to-Agent Commerce API for the 2026 Agentic Economy
   version: '2026.1'
-  description: 'Operations tagged Diplomat across 2 of this provider''s published API definitions: merchant-0-com-openapi-original.json, merchant-0-com-openapi.json. Each path carries the servers of the definition it was published in.'
-servers:
-- url: https://api.merchant-0.com
-  description: Production. The spec is served from this host at /openapi.json and the A2A agent card names it as agent_api; the harvested document declares no servers[] (added by API Evangelist, recorded in overlays/merchant-0-com-openapi-overlay.yaml).
 tags:
 - name: Diplomat
 paths:
@@ -53,27 +50,6 @@ paths:
       - Diplomat
 components:
   schemas:
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -97,6 +73,24 @@ components:
       - buyer_did
       title: ReputationResetRequest
       description: POST /api/diplomat/reputation/reset body.
-x-refined-from:
-- merchant-0-com-openapi-original.json
-- merchant-0-com-openapi.json
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
