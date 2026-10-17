@@ -101,29 +101,6 @@ paths:
       - Advocate
 components:
   schemas:
-    DisputeResolveRequest:
-      properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-        resolution:
-          type: string
-          title: Resolution
-        status:
-          type: string
-          title: Status
-        advocate_notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Advocate Notes
-      type: object
-      required:
-      - sandbox_token
-      - resolution
-      - status
-      title: DisputeResolveRequest
-      description: POST /api/advocate/disputes/{id}/resolve body.
     HTTPValidationError:
       properties:
         detail:
@@ -154,3 +131,26 @@ components:
       - msg
       - type
       title: ValidationError
+    DisputeResolveRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+        resolution:
+          type: string
+          title: Resolution
+        status:
+          type: string
+          title: Status
+        advocate_notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Advocate Notes
+      type: object
+      required:
+      - sandbox_token
+      - resolution
+      - status
+      title: DisputeResolveRequest
+      description: POST /api/advocate/disputes/{id}/resolve body.

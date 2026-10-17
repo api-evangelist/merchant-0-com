@@ -306,6 +306,35 @@ paths:
       - Ucp
 components:
   schemas:
+    NegotiateRequest:
+      properties:
+        requesting_agent_did:
+          type: string
+          title: Requesting Agent Did
+        product_sku:
+          type: string
+          title: Product Sku
+        quantity:
+          type: integer
+          exclusiveMinimum: 0.0
+          title: Quantity
+        max_price_per_unit:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Max Price Per Unit
+        delivery_region:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Region
+      type: object
+      required:
+      - requesting_agent_did
+      - product_sku
+      - quantity
+      title: NegotiateRequest
+      description: Quote/negotiation request.
     HTTPValidationError:
       properties:
         detail:
@@ -344,6 +373,27 @@ components:
       - items
       title: CheckoutRequest
       description: Combined checkout request.
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     CatalogSearchRequest:
       properties:
         query:
@@ -379,53 +429,3 @@ components:
       type: object
       title: CatalogSearchRequest
       description: Catalog search request.
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    NegotiateRequest:
-      properties:
-        requesting_agent_did:
-          type: string
-          title: Requesting Agent Did
-        product_sku:
-          type: string
-          title: Product Sku
-        quantity:
-          type: integer
-          exclusiveMinimum: 0.0
-          title: Quantity
-        max_price_per_unit:
-          anyOf:
-          - type: number
-          - type: 'null'
-          title: Max Price Per Unit
-        delivery_region:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Region
-      type: object
-      required:
-      - requesting_agent_did
-      - product_sku
-      - quantity
-      title: NegotiateRequest
-      description: Quote/negotiation request.

@@ -77,6 +77,15 @@ paths:
       - Sentinel
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     WhitelistMutateRequest:
       properties:
         sandbox_token:
@@ -91,15 +100,6 @@ components:
       - buyer_did
       title: WhitelistMutateRequest
       description: POST /api/sentinel/whitelist/{add,remove} body.
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     ValidationError:
       properties:
         loc:

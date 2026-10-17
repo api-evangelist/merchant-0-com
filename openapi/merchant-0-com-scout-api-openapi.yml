@@ -254,16 +254,6 @@ components:
       - msg
       - type
       title: ValidationError
-    ScoutApproveRequest:
-      properties:
-        sandbox_token:
-          type: string
-          title: Sandbox Token
-      type: object
-      required:
-      - sandbox_token
-      title: ScoutApproveRequest
-      description: POST /api/scout/proposals/{id}/approve body.
     ScoutRejectRequest:
       properties:
         sandbox_token:
@@ -283,3 +273,13 @@ components:
 
 
         rejection_reason is optional but logged when present.'
+    ScoutApproveRequest:
+      properties:
+        sandbox_token:
+          type: string
+          title: Sandbox Token
+      type: object
+      required:
+      - sandbox_token
+      title: ScoutApproveRequest
+      description: POST /api/scout/proposals/{id}/approve body.

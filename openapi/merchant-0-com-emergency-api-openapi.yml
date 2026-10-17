@@ -143,6 +143,24 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    EmergencyActionRequest:
+      properties:
+        ceo_token:
+          type: string
+          title: Ceo Token
+        ceo_pin:
+          type: string
+          title: Ceo Pin
+        confirmation:
+          type: string
+          title: Confirmation
+      type: object
+      required:
+      - ceo_token
+      - ceo_pin
+      - confirmation
+      title: EmergencyActionRequest
+      description: "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."
     ValidationError:
       properties:
         loc:
@@ -164,21 +182,3 @@ components:
       - msg
       - type
       title: ValidationError
-    EmergencyActionRequest:
-      properties:
-        ceo_token:
-          type: string
-          title: Ceo Token
-        ceo_pin:
-          type: string
-          title: Ceo Pin
-        confirmation:
-          type: string
-          title: Confirmation
-      type: object
-      required:
-      - ceo_token
-      - ceo_pin
-      - confirmation
-      title: EmergencyActionRequest
-      description: "POST body for every /emergency/* mutating endpoint.\n\nceo_token    -- CEO_PRODUCTION_TOKEN (KEY 01), injected by the\n                dashboard proxy at /api/emergency. Never appears\n                in the client bundle.\nceo_pin      -- CEO_EMERGENCY_PIN (KEY 19), entered by the CEO in\n                the /ceo/emergency UI password field. Never logged.\nconfirmation -- Must equal the literal string \"CONFIRM\". Guards\n                against one-click or replay-via-fuzzed-payload."
